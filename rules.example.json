@@ -1,0 +1,141 @@
+{
+  "_comment": "Design Linter 規則範本 — 複製此檔案並依照你的 Guideline 修改，放到公司伺服器後在管理員後台設定 URL",
+  "version": "1.0",
+
+  "spacingConfig": {
+    "_comment": "覆蓋允許的間距值。若不填，plugin 會從 Figma library 的 spacing collection 自動萃取。",
+    "allowedValues": [0, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96]
+  },
+
+  "rules": [
+
+    {
+      "_section": "=== Toolbar 相關規則 ==="
+    },
+
+    {
+      "id": "toolbar-wrapper",
+      "name": "Toolbar 需包在 frame 內",
+      "description": "使用 Toolbar 元件時，外層必須直接包一個 frame（不能直接放在 section 或 page 上）",
+      "targetComponentName": "Toolbar",
+      "checks": [
+        { "type": "mustHaveParentFrame" }
+      ]
+    },
+
+    {
+      "id": "toolbar-bottom-padding",
+      "name": "Toolbar 外層 frame 需設定 bottom padding",
+      "description": "包裹 Toolbar 的 frame 底部 padding 必須綁定 spacing-8 Variable",
+      "targetComponentName": "Toolbar",
+      "checks": [
+        { "type": "mustHaveParentFrame" },
+        { "type": "parentPadding", "side": "bottom", "variableName": "spacing-8" }
+      ]
+    },
+
+    {
+      "_section": "=== Navigation Bar 相關規則 ==="
+    },
+
+    {
+      "id": "navbar-horizontal-layout",
+      "name": "NavBar 必須使用橫向 Auto Layout",
+      "description": "NavBar 元件本身的 layoutMode 必須設為 HORIZONTAL",
+      "targetComponentName": "NavBar",
+      "checks": [
+        { "type": "requiredProperty", "property": "layoutMode", "expectedValue": "HORIZONTAL" }
+      ]
+    },
+
+    {
+      "id": "navbar-wrapper-padding",
+      "name": "NavBar 外層需有左右 padding",
+      "description": "包裹 NavBar 的 frame 左側 padding 必須綁定 spacing-16",
+      "targetComponentName": "NavBar",
+      "checks": [
+        { "type": "mustHaveParentFrame" },
+        { "type": "parentPadding", "side": "left", "variableName": "spacing-16" },
+        { "type": "parentPadding", "side": "right", "variableName": "spacing-16" }
+      ]
+    },
+
+    {
+      "_section": "=== Card 相關規則 ==="
+    },
+
+    {
+      "id": "card-corner-radius",
+      "name": "Card 圓角必須是 12",
+      "description": "Card 元件的 cornerRadius 必須設定為 12（對應設計系統的 radius-md）",
+      "targetComponentName": "Card",
+      "checks": [
+        { "type": "requiredProperty", "property": "cornerRadius", "expectedValue": 12 }
+      ]
+    },
+
+    {
+      "id": "card-clips-content",
+      "name": "Card 必須開啟 Clip Content",
+      "description": "Card 需開啟 clipsContent，避免子元素超出圓角範圍",
+      "targetComponentName": "Card",
+      "checks": [
+        { "type": "requiredProperty", "property": "clipsContent", "expectedValue": true }
+      ]
+    },
+
+    {
+      "_section": "=== Dialog / Modal 相關規則 ==="
+    },
+
+    {
+      "id": "dialog-wrapper",
+      "name": "Dialog 必須包在 frame 內",
+      "description": "Dialog/Modal 元件必須放在一個 frame 容器內，不可直接放置在 section 層級",
+      "targetComponentName": "Dialog",
+      "checks": [
+        { "type": "mustHaveParentFrame" }
+      ]
+    },
+
+    {
+      "id": "modal-wrapper",
+      "name": "Modal 必須包在 frame 內",
+      "description": "同 Dialog 規則，Modal 元件也需要包在 frame 內",
+      "targetComponentName": "Modal",
+      "checks": [
+        { "type": "mustHaveParentFrame" }
+      ]
+    },
+
+    {
+      "_section": "=== Page Layout 相關規則 ==="
+    },
+
+    {
+      "id": "page-content-padding",
+      "name": "PageContent 需有上方 padding",
+      "description": "PageContent 的父層 frame 頂部 padding 需綁定 spacing-24",
+      "targetComponentName": "PageContent",
+      "checks": [
+        { "type": "mustHaveParentFrame" },
+        { "type": "parentPadding", "side": "top", "variableName": "spacing-24" }
+      ]
+    },
+
+    {
+      "_section": "=== 禁止使用的屬性 ==="
+    },
+
+    {
+      "id": "no-rotation-on-icon",
+      "name": "Icon 不應有旋轉角度",
+      "description": "Icon 元件不應設定 rotation，若需要旋轉效果請使用對應的旋轉版本元件",
+      "targetComponentName": "Icon",
+      "checks": [
+        { "type": "forbiddenProperty", "property": "rotation" }
+      ]
+    }
+
+  ]
+}

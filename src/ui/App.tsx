@@ -1,0 +1,158 @@
+import { useState, useEffect, useCallback, useRef } from 'react'
+import type { Issue, UIMessage, PluginMessage, CacheInfo } from '../../src/types'
+import IssueList from './components/IssueList'
+import AdminPanel from './components/AdminPanel'
+
+type AppState = 'loading' | 'idle' | 'scanning' | 'results'
+
+function postMessage(msg: PluginMessage) {
+  parent.postMessage({ pluginMessage: msg }, '*')
+}
+
+export default function App() {
+  const [appState, setAppState] = useState<AppState>('loading')
+  const [loadingMsg, setLoadingMsg] = useState('正在讀取設計規則...')
+  const [issues, setIssues] = useState<Issue[]>([])
+  const [nodeCount, setNodeCount] = useState(0)
+  const [hasSelection, setHasSelection] = useState(false)
+  const [cacheInfo, setCacheInfo] = useState<CacheInfo | null>(null)
+  const [errorMsg, setErrorMsg] = useState('')
+  const [showAdmin, setShowAdmin] = useState(false)
+  const titleClickCount = useRef(0)
+  const titleClickTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    const handler = (event: MessageEvent) => {
+      const msg = event.data?.pluginMessage as UIMessage | undefined
+      if (!msg) return
+
+      switch (msg.type) {
+        case 'LOADING':
+          setAppState('loading')
+          setLoadingMsg(msg.message)
+          break
+        case 'CACHE_INFO':
+          setCacheInfo(msg.info)
+          setAppState(s => s === 'loading' ? 'idle' : s)
+          break
+        case 'SELECTION_CHANGED':
+          setHasSelection(msg.hasSelection)
+          break
+        case 'SCAN_RESULT':
+          setIssues(msg.issues)
+          setNodeCount(msg.nodeCount)
+          setAppState('results')
+          break
+        case 'ERROR':
+          setErrorMsg(msg.message)
+          setAppState(s => s === 'scanning' ? 'idle' : s)
+          break
+      }
+    }
+    window.addEventListener('message', handler)
+    return () => window.removeEventListener('message', handler)
+  })
+
+  useEffect(() => {
+    postMessage({ type: 'GET_CACHE' })
+  }, [])
+
+  const handleTitleClick = useCallback(() => {
+    titleClickCount.current += 1
+    if (titleClickTimer.current) clearTimeout(titleClickTimer.current)
+    titleClickTimer.current = setTimeout(() => { titleClickCount.current = 0 }, 2000)
+    if (titleClickCount.current >= 5) {
+      titleClickCount.current = 0
+      setShowAdmin(v => !v)
+    }
+  }, [])
+
+  const handleScan = () => {
+    setAppState('scanning')
+    setErrorMsg('')
+    postMessage({ type: 'SCAN' })
+  }
+
+  const handleRefreshCache = (url?: string) => {
+    setAppState('loading')
+    setLoadingMsg('正在更新設計規則...')
+    postMessage({ type: 'REFRESH_CACHE', rulesJsonUrl: url })
+  }
+
+  if (showAdmin) {
+    return (
+      <div className="app">
+        <header className="header">
+          <button className="back-btn" onClick={() => setShowAdmin(false)}>←</button>
+          <h1 className="title">管理員設定</h1>
+        </header>
+        <AdminPanel cacheInfo={cacheInfo} onRefresh={handleRefreshCache} />
+      </div>
+    )
+  }
+
+  return (
+    <div className="app">
+      <header className="header">
+        <h1 className="title" onClick={handleTitleClick}>Design Linter</h1>
+      </header>
+
+      {appState === 'loading' && (
+        <div className="loading-state">
+          <div className="spinner" />
+          <p className="loading-text">{loadingMsg}</p>
+        </div>
+      )}
+
+      {appState !== 'loading' && (
+        <div className="content">
+          {errorMsg && (
+            <div className="error-banner">
+              <span>{errorMsg}</span>
+              <button onClick={() => setErrorMsg('')}>✕</button>
+            </div>
+          )}
+
+          <div className="scan-bar">
+            <button
+              className="scan-btn"
+              onClick={handleScan}
+              disabled={appState === 'scanning' || !hasSelection}
+            >
+              {appState === 'scanning' ? '掃描中...' : '掃描選取範圍'}
+            </button>
+          </div>
+
+          {appState === 'idle' && !hasSelection && (
+            <div className="empty-state">
+              <p>請在 Figma 中選取要掃描的元素</p>
+            </div>
+          )}
+
+          {appState === 'idle' && hasSelection && (
+            <div className="empty-state" style={{ color: '#aaa' }}>
+              <p>已選取元素，按上方按鈕開始掃描</p>
+            </div>
+          )}
+
+          {appState === 'results' && (
+            <>
+              {issues.length === 0 ? (
+                <div className="success-state">
+                  <div className="check-icon">✓</div>
+                  <p>選取範圍符合設計規範</p>
+                  <p className="sub">已掃描 {nodeCount} 個元素</p>
+                </div>
+              ) : (
+                <IssueList
+                  issues={issues}
+                  onSelectNode={id => postMessage({ type: 'SELECT_NODE', nodeId: id })}
+                />
+              )}
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}

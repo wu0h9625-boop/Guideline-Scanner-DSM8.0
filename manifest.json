@@ -1,0 +1,13 @@
+{
+  "name": "Design Linter",
+  "id": "design-linter-plugin",
+  "api": "1.0.0",
+  "editorType": ["figma"],
+  "permissions": ["teamlibrary"],
+  "networkAccess": {
+    "allowedDomains": ["*"],
+    "reasoning": "Used to fetch component rules from the company's internal JSON config file."
+  },
+  "main": "dist/plugin.js",
+  "ui": "dist/index.html"
+}

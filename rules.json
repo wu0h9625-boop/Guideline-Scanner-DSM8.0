@@ -1,0 +1,150 @@
+{
+  "version": "1.0",
+  "rules": [
+    {
+      "id": "label-value-item-spacing",
+      "name": "Label / Value 間距",
+      "description": "Label 與 Value 之間的 gap 應綁定 spacing-6 variable。請選取父層容器，確認 item spacing 設定為 spacing-6。",
+      "targetComponentName": "Label",
+      "checks": [
+        { "type": "mustHaveParentFrame" },
+        { "type": "parentItemSpacing", "variableName": "spacing-6" }
+      ]
+    },
+    {
+      "id": "form-group-item-spacing",
+      "name": "Form Group 元件間距",
+      "description": "連續排列的 Form Group 之間的 gap 應綁定 spacing-6 variable。請確認父層容器的 item spacing 設定為 spacing-6。",
+      "targetComponentName": "Form Group",
+      "checks": [
+        { "type": "mustHaveParentFrame" },
+        { "type": "parentItemSpacing", "variableName": "spacing-6" }
+      ]
+    },
+    {
+      "id": "content-viewport-height-fill",
+      "name": "Content Viewport 高度應設為 fill",
+      "description": "Content Viewport 是視覺可視範圍，高度必須設為 fill，讓它撐滿父層空間。請在 Figma 將高度改為「Fill container」。",
+      "targetComponentName": "content viewport",
+      "checks": [
+        { "type": "requiredProperty", "property": "layoutSizingVertical", "expectedValue": "FILL" }
+      ]
+    },
+    {
+      "id": "content-panel-height-hug",
+      "name": "Content Panel 高度應設為 hug",
+      "description": "Content Panel 是放置主要內容的面板，高度必須設為 hug，由內容決定高度。請在 Figma 將高度改為「Hug contents」。",
+      "targetComponentName": "content panel",
+      "checks": [
+        { "type": "requiredProperty", "property": "layoutSizingVertical", "expectedValue": "HUG" }
+      ]
+    },
+    {
+      "id": "tab-in-tab-bar",
+      "name": "Tab 元件必須包在 tab bar 內",
+      "description": "名稱含「Tab」的元件必須放在名稱含「tab bar」的 Auto Layout frame 內。請新增一個 tab bar frame 並將 Tab 元件放入。",
+      "targetComponentName": "Tab",
+      "checks": [
+        { "type": "mustHaveParentNamed", "parentName": "tab bar" }
+      ]
+    },
+    {
+      "id": "tab-bar-padding",
+      "name": "Tab bar padding 規範",
+      "description": "Tab bar 的 padding 應為 top=spacing-16、right=spacing-20、left=spacing-20（bottom=0 不綁 variable）。",
+      "targetComponentName": "tab bar",
+      "checks": [
+        { "type": "ownPadding", "side": "top", "variableName": "spacing-16" },
+        { "type": "ownPaddingByAncestor", "side": "right", "ifHasAncestorNamed": "body-right", "thenVariableName": "spacing-20", "elseVariableName": "spacing-24" },
+        { "type": "ownPaddingByAncestor", "side": "left", "ifHasAncestorNamed": "body-right", "thenVariableName": "spacing-20", "elseVariableName": "spacing-24" }
+      ]
+    },
+    {
+      "id": "tab-bar-width-fill",
+      "name": "Tab bar 寬度應設為 fill",
+      "description": "Tab bar frame 的寬度必須設為「Fill container」，不可為固定寬度或 hug。",
+      "targetComponentName": "tab bar",
+      "checks": [
+        { "type": "requiredProperty", "property": "layoutSizingHorizontal", "expectedValue": "FILL" }
+      ]
+    },
+    {
+      "id": "content-panel-padding",
+      "name": "Content Panel padding 規範",
+      "description": "Content Panel 的 right=spacing-20、left=spacing-20、bottom=spacing-16。Top padding 依有無 tab bar 而不同（有 tab bar 為 0，無 tab bar 為 spacing-16），請依情境設定。",
+      "targetComponentName": "content panel",
+      "checks": [
+        { "type": "ownPaddingByAncestor", "side": "right", "ifHasAncestorNamed": "body-right", "thenVariableName": "spacing-20", "elseVariableName": "spacing-24" },
+        { "type": "ownPaddingByAncestor", "side": "left", "ifHasAncestorNamed": "body-right", "thenVariableName": "spacing-20", "elseVariableName": "spacing-24" },
+        { "type": "ownPadding", "side": "bottom", "variableName": "spacing-16" },
+        {
+          "type": "ownPaddingByContext",
+          "side": "top",
+          "ifParentSiblingNamed": "tab bar",
+          "thenExpectedPx": 0,
+          "elseVariableName": "spacing-16"
+        }
+      ]
+    },
+    {
+      "id": "content-panel-in-content-viewport",
+      "name": "Content Panel 必須放在 Content Viewport 內",
+      "description": "Content Panel 的直接父層 Frame 應命名含「content viewport」。請確認結構為：(body 或 body-right) > content viewport > content panel。",
+      "targetComponentName": "content panel",
+      "checks": [
+        { "type": "mustHaveParentNamed", "parentName": "content viewport" }
+      ]
+    },
+    {
+      "id": "body-left-in-body",
+      "name": "Body-left 必須放在 Body 內",
+      "description": "Page list app window 的 body-left（page list 側欄）直接父層應命名含「body」。請確認結構為：page list app window > body > body-left。",
+      "targetComponentName": "body-left",
+      "checks": [
+        { "type": "mustHaveParentNamed", "parentName": "body" }
+      ]
+    },
+    {
+      "id": "body-right-in-body",
+      "name": "Body-right 必須放在 Body 內",
+      "description": "Page list app window 的 body-right 直接父層應命名含「body」。請確認結構為：page list app window > body > body-right。",
+      "targetComponentName": "body-right",
+      "checks": [
+        { "type": "mustHaveParentNamed", "parentName": "body" }
+      ]
+    },
+    {
+      "id": "fieldset-in-content-panel",
+      "name": "Fieldset 必須放在 Content Panel 內",
+      "description": "Fieldset 的直接父層應命名含「content panel」。請確認結構為：content panel > Fieldset。",
+      "targetComponentName": "Fieldset",
+      "checks": [
+        { "type": "mustHaveParentNamed", "parentName": "content panel" }
+      ]
+    },
+    {
+      "id": "fieldset-item-spacing",
+      "name": "Fieldset 內部 gap（header 與 body 之間）",
+      "description": "Fieldset 的 fieldset header 與 fieldset body 之間的 gap 應綁定 spacing-8 variable。請確認 Fieldset 的 item spacing 設定為 spacing-8。",
+      "targetComponentName": "fieldset body",
+      "checks": [
+        { "type": "mustHaveParentNamed", "parentName": "fieldset" },
+        { "type": "parentItemSpacing", "variableName": "spacing-8" }
+      ]
+    },
+    {
+      "id": "content-panel-item-spacing",
+      "name": "Content Panel 內容間距",
+      "description": "Content Panel 放置 Fieldset 時 item spacing 應綁定 spacing-16；放置一般 section 時應綁定 spacing-12。",
+      "targetComponentName": "content panel",
+      "checks": [
+        {
+          "type": "ownItemSpacingByChildType",
+          "ifHasChildNamed": "fieldset",
+          "thenVariableName": "spacing-16",
+          "elseVariableName": "spacing-12"
+        }
+      ]
+    }
+  ]
+}
