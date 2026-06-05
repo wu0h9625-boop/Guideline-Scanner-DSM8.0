@@ -7,7 +7,6 @@
       "description": "Window 元件本身的 stroke 必須使用 border-tertiary token，陰影必須套用 box-shadow-l effect style。子元件（如 App Window Title、Window footbar）不在此規則範圍內。",
       "targetComponentName": "window",
       "checks": [
-        { "type": "skipIfHasAncestorNamed", "ancestorName": "window" },
         { "type": "strokeVariableName", "variableName": "border-tertiary" },
         { "type": "requiredEffectStyleName", "styleName": "box-shadow-l" }
       ]
@@ -18,7 +17,6 @@
       "description": "Wizard 元件本身的 stroke 必須使用 border-tertiary token，陰影必須套用 box-shadow-l effect style。",
       "targetComponentName": "wizard",
       "checks": [
-        { "type": "skipIfHasAncestorNamed", "ancestorName": "wizard" },
         { "type": "strokeVariableName", "variableName": "border-tertiary" },
         { "type": "requiredEffectStyleName", "styleName": "box-shadow-l" }
       ]
@@ -29,7 +27,6 @@
       "description": "Message Box 本身的 stroke 必須使用 border-tertiary token，陰影必須套用 box-shadow-l effect style。",
       "targetComponentName": "message box",
       "checks": [
-        { "type": "skipIfHasAncestorNamed", "ancestorName": "message box" },
         { "type": "strokeVariableName", "variableName": "border-tertiary" },
         { "type": "requiredEffectStyleName", "styleName": "box-shadow-l" }
       ]
@@ -40,7 +37,6 @@
       "description": "Folder Chooser / File Chooser 本身的 stroke 必須使用 border-tertiary token，陰影必須套用 box-shadow-l effect style。",
       "targetComponentName": "chooser",
       "checks": [
-        { "type": "skipIfHasAncestorNamed", "ancestorName": "chooser" },
         { "type": "strokeVariableName", "variableName": "border-tertiary" },
         { "type": "requiredEffectStyleName", "styleName": "box-shadow-l" }
       ]
