@@ -53,6 +53,8 @@ export type RuleCheck =
   | { type: 'forbiddenProperty'; property: string }
   | { type: 'fillVariablePrefix'; prefix: string }
   | { type: 'fillVariableName'; variableName: string }
+  | { type: 'strokeVariableName'; variableName: string }
+  | { type: 'requiredEffectStyleName'; styleName: string }
   | { type: 'requiredPropertyIfHasChild'; ifHasChildNamed: string; property: string; expectedValue: string | number }
   | { type: 'requiredPropertyByDescendant'; ifHasDescendantNamed: string; property: string; thenExpectedValue: string | number; elseExpectedValue: string | number }
 

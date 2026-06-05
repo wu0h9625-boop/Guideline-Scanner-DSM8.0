@@ -2,6 +2,46 @@
   "version": "1.0",
   "rules": [
     {
+      "id": "window-stroke-shadow",
+      "name": "Window 類元件 stroke 與陰影規範",
+      "description": "Window / Wizard 元件的 stroke 必須使用 border-tertiary token，陰影必須套用 box-shadow-l effect style。",
+      "targetComponentName": "window",
+      "checks": [
+        { "type": "strokeVariableName", "variableName": "border-tertiary" },
+        { "type": "requiredEffectStyleName", "styleName": "box-shadow-l" }
+      ]
+    },
+    {
+      "id": "wizard-stroke-shadow",
+      "name": "Wizard stroke 與陰影規範",
+      "description": "Wizard 元件的 stroke 必須使用 border-tertiary token，陰影必須套用 box-shadow-l effect style。",
+      "targetComponentName": "wizard",
+      "checks": [
+        { "type": "strokeVariableName", "variableName": "border-tertiary" },
+        { "type": "requiredEffectStyleName", "styleName": "box-shadow-l" }
+      ]
+    },
+    {
+      "id": "message-box-stroke-shadow",
+      "name": "Message Box stroke 與陰影規範",
+      "description": "Message Box 的 stroke 必須使用 border-tertiary token，陰影必須套用 box-shadow-l effect style。",
+      "targetComponentName": "message box",
+      "checks": [
+        { "type": "strokeVariableName", "variableName": "border-tertiary" },
+        { "type": "requiredEffectStyleName", "styleName": "box-shadow-l" }
+      ]
+    },
+    {
+      "id": "chooser-stroke-shadow",
+      "name": "Chooser 類元件 stroke 與陰影規範",
+      "description": "Folder Chooser / File Chooser 的 stroke 必須使用 border-tertiary token，陰影必須套用 box-shadow-l effect style。",
+      "targetComponentName": "chooser",
+      "checks": [
+        { "type": "strokeVariableName", "variableName": "border-tertiary" },
+        { "type": "requiredEffectStyleName", "styleName": "box-shadow-l" }
+      ]
+    },
+    {
       "id": "label-value-item-spacing",
       "name": "Label / Value 間距",
       "description": "Label 與 Value 之間的 gap 應綁定 spacing-6 variable。請選取父層容器，確認 item spacing 設定為 spacing-6。",
