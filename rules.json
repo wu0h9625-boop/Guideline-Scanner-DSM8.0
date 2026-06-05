@@ -200,7 +200,7 @@
       "id": "toolbar-above-datatable-gap",
       "name": "Toolbar 放於 DataTable / DataView 上方時的 bottom padding",
       "description": "Toolbar 放置於 DataTable 或 DataView 上方時，Toolbar 元件自身的 bottom padding 應綁定 spacing-8。請確認 Toolbar 的 bottom padding 設定為 spacing-8。",
-      "targetComponentName": "oolbar",
+      "targetComponentName": "toolbar",
       "checks": [
         { "type": "ownPadding", "side": "bottom", "variableName": "spacing-8" }
       ]
