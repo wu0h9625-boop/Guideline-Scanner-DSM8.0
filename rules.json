@@ -31,12 +31,18 @@
       ]
     },
     {
-      "id": "content-panel-height-hug",
-      "name": "Content Panel 高度應設為 hug",
-      "description": "Content Panel 是放置主要內容的面板，高度必須設為 hug，由內容決定高度。請在 Figma 將高度改為「Hug contents」。",
+      "id": "content-panel-height",
+      "name": "Content Panel 高度規範",
+      "description": "Content Panel 一般高度設為 hug；若內部（直接或透過 panel 間接）含有 DataTable，則必須改為 fill。",
       "targetComponentName": "content panel",
       "checks": [
-        { "type": "requiredProperty", "property": "layoutSizingVertical", "expectedValue": "HUG" }
+        {
+          "type": "requiredPropertyByDescendant",
+          "ifHasDescendantNamed": "data table",
+          "property": "layoutSizingVertical",
+          "thenExpectedValue": "FILL",
+          "elseExpectedValue": "HUG"
+        }
       ]
     },
     {
@@ -164,15 +170,6 @@
       "targetComponentName": "icn",
       "checks": [
         { "type": "fillVariablePrefix", "prefix": "ic" }
-      ]
-    },
-    {
-      "id": "content-panel-fill-when-datatable",
-      "name": "Content Panel 含 DataTable 時高度需設為 fill",
-      "description": "Content Panel 內有 DataTable 時，高度必須設為「Fill container」，讓 DataTable 撐滿可視區域。",
-      "targetComponentName": "content panel",
-      "checks": [
-        { "type": "requiredPropertyIfHasChild", "ifHasChildNamed": "data table", "property": "layoutSizingVertical", "expectedValue": "FILL" }
       ]
     },
     {
