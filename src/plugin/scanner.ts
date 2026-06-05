@@ -4,6 +4,7 @@ import {
   checkSpacing,
   checkTextStyle,
   checkComponentRules,
+  getExemptSpacingValues,
   clearVarCache,
 } from './rules'
 
@@ -20,9 +21,10 @@ async function checkNode(
   const { id, name } = node
   const issues: Issue[] = []
 
+  const exemptSpacing = getExemptSpacingValues(name, cache.componentRules)
   const [colorIssues, spacingIssues] = await Promise.all([
     checkFillsAndStrokes(node, cache, id, name, breadcrumb),
-    checkSpacing(node, cache, id, name, breadcrumb),
+    checkSpacing(node, cache, id, name, breadcrumb, exemptSpacing),
   ])
 
   const componentIssues = await checkComponentRules(node, cache, id, name, breadcrumb, withinInstance)

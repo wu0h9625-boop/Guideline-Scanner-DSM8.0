@@ -1,8 +1,5 @@
 {
   "version": "1.0",
-  "spacingConfig": {
-    "allowedValues": [1, 9]
-  },
   "rules": [
     {
       "id": "label-value-item-spacing",
@@ -168,6 +165,38 @@
       "checks": [
         { "type": "fillVariablePrefix", "prefix": "ic" }
       ]
+    },
+    {
+      "id": "table-header-exempt-spacing",
+      "name": "Table Header 間距豁免",
+      "description": "Table Header 的 1px 上下間距為設計規範，不需綁定 token。",
+      "targetComponentName": "table header",
+      "exemptHardcodedSpacing": [1],
+      "checks": []
+    },
+    {
+      "id": "table-content-exempt-spacing",
+      "name": "Table Content 間距豁免",
+      "description": "Table Content 的 1px 上下間距為設計規範，不需綁定 token。",
+      "targetComponentName": "table content",
+      "exemptHardcodedSpacing": [1],
+      "checks": []
+    },
+    {
+      "id": "table-header-cell-exempt-spacing",
+      "name": "Table Header Cell 右 padding 豁免",
+      "description": "Table Header Cell 的 9px 右 padding 為設計規範，不需綁定 token。",
+      "targetComponentName": "table header cell",
+      "exemptHardcodedSpacing": [9],
+      "checks": []
+    },
+    {
+      "id": "table-content-cell-exempt-spacing",
+      "name": "Table Content Cell 右 padding 豁免",
+      "description": "Table Content Cell 的 9px 右 padding 為設計規範，不需綁定 token。",
+      "targetComponentName": "table content cell",
+      "exemptHardcodedSpacing": [9],
+      "checks": []
     },
     {
       "id": "button-gap-item-spacing",

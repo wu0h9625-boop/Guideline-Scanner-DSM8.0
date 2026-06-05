@@ -119,10 +119,7 @@ export async function applyRulesJson(cache: DesignSystemCache, data: unknown): P
     }
     const spacingConfig = d.spacingConfig as Record<string, unknown> | undefined
     if (Array.isArray(spacingConfig?.allowedValues)) {
-      // Merge extra allowed values from rules.json into existing library values
-      const extras = spacingConfig!.allowedValues as number[]
-      const merged = Array.from(new Set([...updated.allowedSpacingValues, ...extras])).sort((a, b) => a - b)
-      updated.allowedSpacingValues = merged
+      updated.allowedSpacingValues = spacingConfig!.allowedValues as number[]
     }
   }
 
