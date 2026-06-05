@@ -146,6 +146,74 @@
           "elseVariableName": "spacing-12"
         }
       ]
+    },
+    {
+      "id": "text-fill-variable-fg-prefix",
+      "name": "文字 fill token 需使用 fg 前綴",
+      "description": "文字元件的 fill color 必須使用 fg 前綴的 token（如 fg/primary、fg/subtle）。請重新綁定正確的 fg 系列 variable。",
+      "targetComponentName": "",
+      "nodeTypeFilter": "TEXT",
+      "checks": [
+        { "type": "fillVariablePrefix", "prefix": "fg" }
+      ]
+    },
+    {
+      "id": "icon-fill-variable-ic-prefix",
+      "name": "Icon 元件 fill token 需使用 ic 前綴",
+      "description": "icn 開頭的 icon 元件的 fill color 必須使用 ic 前綴的 token（如 ic/primary、ic/subtle）。請重新綁定正確的 ic 系列 variable。",
+      "targetComponentName": "icn",
+      "checks": [
+        { "type": "fillVariablePrefix", "prefix": "ic" }
+      ]
+    },
+    {
+      "id": "button-gap-item-spacing",
+      "name": "Button 並排間距",
+      "description": "非 Footer Bar 類的 Button 左右並排，或 Button 與 Input / Select 並排時，父層容器的 item spacing 應綁定 spacing-6。請確認父層 frame 的 gap between items 設定為 spacing-6。",
+      "targetComponentName": "Button",
+      "checks": [
+        { "type": "mustHaveParentFrame" },
+        { "type": "parentItemSpacing", "variableName": "spacing-6" }
+      ]
+    },
+    {
+      "id": "checkbox-gap-item-spacing",
+      "name": "Checkbox 與相鄰元件的間距",
+      "description": "Checkbox 與其 Description 或巢狀 Form Items 之間的 gap 應綁定 spacing-6。請確認父層 frame 的 gap between items 設定為 spacing-6。",
+      "targetComponentName": "Checkbox",
+      "checks": [
+        { "type": "mustHaveParentFrame" },
+        { "type": "parentItemSpacing", "variableName": "spacing-6" }
+      ]
+    },
+    {
+      "id": "radio-gap-item-spacing",
+      "name": "Radio 與相鄰元件的間距",
+      "description": "Radio 與其 Description 或巢狀 Form Items 之間的 gap 應綁定 spacing-6。請確認父層 frame 的 gap between items 設定為 spacing-6。",
+      "targetComponentName": "Radio",
+      "checks": [
+        { "type": "mustHaveParentFrame" },
+        { "type": "parentItemSpacing", "variableName": "spacing-6" }
+      ]
+    },
+    {
+      "id": "toolbar-above-datatable-gap",
+      "name": "Toolbar 放於 DataTable / DataView 上方時的 bottom padding",
+      "description": "Toolbar 放置於 DataTable 或 DataView 上方時，Toolbar 元件自身的 bottom padding 應綁定 spacing-8。請確認 Toolbar 的 bottom padding 設定為 spacing-8。",
+      "targetComponentName": "oolbar",
+      "checks": [
+        { "type": "ownPadding", "side": "bottom", "variableName": "spacing-8" }
+      ]
+    },
+    {
+      "id": "split-bar-placement-and-gap",
+      "name": "Split Bar 放置與間距",
+      "description": "Split Bar 用於 Toolbar 內按鈕分類，必須放在 Toolbar frame 內，且父層 item spacing 應綁定 spacing-6。請確認 Toolbar frame 的 gap between items 設定為 spacing-6。",
+      "targetComponentName": "Split Bar",
+      "checks": [
+        { "type": "mustHaveParentNamed", "parentName": "Toolbar" },
+        { "type": "parentItemSpacing", "variableName": "spacing-6" }
+      ]
     }
   ]
 }

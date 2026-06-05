@@ -32,6 +32,7 @@ export interface ComponentRule {
   name: string
   description: string
   targetComponentName: string
+  nodeTypeFilter?: string
   checks: RuleCheck[]
 }
 
@@ -47,6 +48,7 @@ export type RuleCheck =
   | { type: 'ownItemSpacingByChildType'; ifHasChildNamed: string; thenVariableName: string; elseVariableName: string }
   | { type: 'requiredProperty'; property: string; expectedValue: string | number }
   | { type: 'forbiddenProperty'; property: string }
+  | { type: 'fillVariablePrefix'; prefix: string }
 
 export interface DesignSystemCache {
   version: number

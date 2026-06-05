@@ -53,13 +53,15 @@ export function toCacheInfo(cache: DesignSystemCache): CacheInfo {
   }
 }
 
-export async function refreshCache(currentCache: DesignSystemCache): Promise<DesignSystemCache> {
+/** Step 1: Read Figma team library collections and spacing values. */
+export async function refreshCacheFromLibrary(currentCache: DesignSystemCache): Promise<DesignSystemCache> {
   const newCache: DesignSystemCache = {
     ...emptyCache(currentCache.rulesJsonUrl),
     rulesJsonUrl: currentCache.rulesJsonUrl,
+    // Keep existing rules until we get a fresh fetch result
+    componentRules: currentCache.componentRules,
   }
 
-  // Step 1: Load token rules from Figma team library
   try {
     const collections = await figma.teamLibrary.getAvailableLibraryVariableCollectionsAsync()
 
@@ -82,16 +84,14 @@ export async function refreshCache(currentCache: DesignSystemCache): Promise<Des
     newCache.deprecatedCollectionKeys = deprecatedKeys
 
     // Extract spacing values by scanning ALL approved collections for variables
-    // whose names start with "spacing" (e.g. "spacing/8", "spacing-16").
-    // This works even when the collection itself is not named "spacing"
-    // (e.g. Synology's "Primitive" collection hosts spacing tokens).
+    // whose names start with "spacing". Works even when the collection itself
+    // is not named "spacing" (e.g. Synology's "Primitive" collection).
     const spacingValues = new Set<number>([0])
     for (const key of approvedKeys) {
       try {
         const vars = await figma.teamLibrary.getVariablesInLibraryCollectionAsync(key)
         for (const v of vars) {
           if (v.resolvedType === 'FLOAT' && /^spac/i.test(v.name)) {
-            // Extract the numeric suffix: "spacing/8" → 8, "spacing-sm/12" → 12
             const match = v.name.match(/(\d+(?:\.\d+)?)(?:\D*)$/)
             if (match) spacingValues.add(parseFloat(match[1]))
           }
@@ -105,29 +105,32 @@ export async function refreshCache(currentCache: DesignSystemCache): Promise<Des
     console.error('[Design Linter] Failed to load library collections:', e)
   }
 
-  // Step 2: Load component rules from JSON URL
-  const url = currentCache.rulesJsonUrl
-  if (url) {
-    try {
-      const resp = await fetch(url, { headers: { 'Content-Type': 'application/json' } })
-      if (resp.ok) {
-        const data = await resp.json()
-        if (Array.isArray(data.rules)) {
-          // Filter out comment/section marker objects (those with '_section' but no 'id')
-          newCache.componentRules = (data.rules as ComponentRule[]).filter(r => r.id && r.checks)
-        }
-        if (Array.isArray(data.spacingConfig?.allowedValues)) {
-          newCache.allowedSpacingValues = data.spacingConfig.allowedValues
-        }
-      } else {
-        console.warn('[Design Linter] Rules JSON fetch failed:', resp.status)
-      }
-    } catch (e) {
-      console.warn('[Design Linter] Failed to fetch rules JSON:', e)
+  return newCache
+}
+
+/** Step 2: Apply fetched rules JSON data to cache and save. */
+export async function applyRulesJson(cache: DesignSystemCache, data: unknown): Promise<DesignSystemCache> {
+  const updated = { ...cache }
+
+  if (data && typeof data === 'object') {
+    const d = data as Record<string, unknown>
+    if (Array.isArray(d.rules)) {
+      updated.componentRules = (d.rules as ComponentRule[]).filter(r => r.id && r.checks)
+    }
+    const spacingConfig = d.spacingConfig as Record<string, unknown> | undefined
+    if (Array.isArray(spacingConfig?.allowedValues)) {
+      updated.allowedSpacingValues = spacingConfig!.allowedValues as number[]
     }
   }
 
-  newCache.lastUpdated = new Date().toISOString()
-  await saveCache(newCache)
-  return newCache
+  updated.lastUpdated = new Date().toISOString()
+  await saveCache(updated)
+  return updated
+}
+
+/** Finalise cache without rules JSON (no URL configured) and save. */
+export async function finaliseCache(cache: DesignSystemCache): Promise<DesignSystemCache> {
+  const updated = { ...cache, lastUpdated: new Date().toISOString() }
+  await saveCache(updated)
+  return updated
 }

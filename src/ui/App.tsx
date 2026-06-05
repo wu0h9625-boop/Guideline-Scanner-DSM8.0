@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, type MouseEvent as ReactMouseEvent } from 'react'
 import type { Issue, UIMessage, PluginMessage, CacheInfo } from '../../src/types'
 import IssueList from './components/IssueList'
 import AdminPanel from './components/AdminPanel'
@@ -21,12 +21,42 @@ export default function App() {
   const titleClickCount = useRef(0)
   const titleClickTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
+  const handleResizeMouseDown = useCallback((e: ReactMouseEvent) => {
+    e.preventDefault()
+    const startX = e.clientX
+    const startY = e.clientY
+    const startW = window.innerWidth
+    const startH = window.innerHeight
+
+    const onMove = (ev: globalThis.MouseEvent) => {
+      const w = Math.max(300, startW + ev.clientX - startX)
+      const h = Math.max(300, startH + ev.clientY - startY)
+      postMessage({ type: 'RESIZE', width: Math.round(w), height: Math.round(h) })
+    }
+    const onUp = () => {
+      window.removeEventListener('mousemove', onMove)
+      window.removeEventListener('mouseup', onUp)
+    }
+    window.addEventListener('mousemove', onMove)
+    window.addEventListener('mouseup', onUp)
+  }, [])
+
   useEffect(() => {
     const handler = (event: MessageEvent) => {
       const msg = event.data?.pluginMessage as UIMessage | undefined
       if (!msg) return
 
       switch (msg.type) {
+        case 'FETCH_RULES_JSON':
+          // Plugin sandbox cannot make network requests — UI does it on its behalf
+          fetch(msg.url)
+            .then(r => {
+              if (!r.ok) throw new Error(`HTTP ${r.status}`)
+              return r.json()
+            })
+            .then(data => postMessage({ type: 'RULES_JSON_RESULT', data }))
+            .catch(err => postMessage({ type: 'RULES_JSON_RESULT', data: null, error: String(err) }))
+          break
         case 'LOADING':
           setAppState('loading')
           setLoadingMsg(msg.message)
@@ -153,6 +183,9 @@ export default function App() {
           )}
         </div>
       )}
+
+      {/* Resize handle — bottom-right corner */}
+      <div className="resize-handle" onMouseDown={handleResizeMouseDown} />
     </div>
   )
 }

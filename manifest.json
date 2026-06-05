@@ -5,8 +5,10 @@
   "editorType": ["figma"],
   "permissions": ["teamlibrary"],
   "networkAccess": {
-    "allowedDomains": ["*"],
-    "reasoning": "Used to fetch component rules from the company's internal JSON config file."
+    "allowedDomains": [
+      "https://raw.githubusercontent.com",
+      "https://*.githubusercontent.com"
+    ]
   },
   "main": "dist/plugin.js",
   "ui": "dist/index.html"
