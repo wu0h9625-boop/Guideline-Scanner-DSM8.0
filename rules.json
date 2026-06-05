@@ -3,21 +3,11 @@
   "rules": [
     {
       "id": "window-stroke-shadow",
-      "name": "Window 類元件 stroke 與陰影規範",
-      "description": "Window 元件本身的 stroke 必須使用 border-tertiary token，陰影必須套用 box-shadow-l effect style。",
+      "name": "頂層 frame stroke 與陰影規範",
+      "description": "直接放在 Page 上的頂層 frame（window / wizard / chooser 等）的 stroke 必須使用 border-tertiary token，陰影必須套用 box-shadow-l effect style。",
       "targetComponentName": "",
-      "targetComponentNames": [
-        "App Window",
-        "Modal Window",
-        "Welcome Window",
-        "Pagelist App Window",
-        "Color Picker Custom Window",
-        "Wizard",
-        "Message Box",
-        "Folder Chooser",
-        "File Chooser"
-      ],
       "checks": [
+        { "type": "mustBeTopLevel" },
         { "type": "strokeVariableName", "variableName": "border-tertiary" },
         { "type": "requiredEffectStyleName", "styleName": "box-shadow-l" }
       ]
