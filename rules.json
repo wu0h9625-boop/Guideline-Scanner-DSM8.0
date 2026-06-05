@@ -1,5 +1,8 @@
 {
   "version": "1.0",
+  "spacingConfig": {
+    "allowedValues": [1, 9]
+  },
   "rules": [
     {
       "id": "label-value-item-spacing",
