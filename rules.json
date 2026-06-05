@@ -167,6 +167,14 @@
       ]
     },
     {
+      "id": "table-footer-exempt-spacing",
+      "name": "Table Footer 間距豁免",
+      "description": "Table Footer 的 1px 上下 padding 與 135px 間距為設計規範，不需綁定 token。",
+      "targetComponentName": "table footer",
+      "exemptHardcodedSpacing": [1, 135],
+      "checks": []
+    },
+    {
       "id": "table-header-exempt-spacing",
       "name": "Table Header 間距豁免",
       "description": "Table Header 的 1px 上下間距為設計規範，不需綁定 token。",
