@@ -32,6 +32,7 @@ export interface ComponentRule {
   name: string
   description: string
   targetComponentName: string
+  excludeComponentName?: string
   nodeTypeFilter?: string
   exemptHardcodedSpacing?: number[]
   checks: RuleCheck[]
