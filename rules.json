@@ -7,7 +7,7 @@
       "description": "直接放在 Page 上的頂層 frame（window / wizard / chooser 等）的 stroke 必須使用 border-tertiary token，陰影必須套用 box-shadow-l effect style。",
       "targetComponentName": "",
       "checks": [
-        { "type": "mustBeTopLevel" },
+        { "type": "mustBeRootNode" },
         { "type": "strokeVariableName", "variableName": "border-tertiary" },
         { "type": "requiredEffectStyleName", "styleName": "box-shadow-l" }
       ]

@@ -48,6 +48,7 @@ export type RuleCheck =
   | { type: 'skipIfParentNamed'; parentName: string }
   | { type: 'skipIfHasAncestorNamed'; ancestorName: string }
   | { type: 'mustBeTopLevel' }
+  | { type: 'mustBeRootNode' }
   | { type: 'ownPadding'; side: 'top' | 'right' | 'bottom' | 'left'; variableName: string }
   | { type: 'ownPaddingByContext'; side: 'top' | 'right' | 'bottom' | 'left'; ifParentSiblingNamed: string; thenExpectedPx: number; elseVariableName: string }
   | { type: 'ownPaddingByAncestor'; side: 'top' | 'right' | 'bottom' | 'left'; ifHasAncestorNamed: string; thenVariableName: string; elseVariableName: string }

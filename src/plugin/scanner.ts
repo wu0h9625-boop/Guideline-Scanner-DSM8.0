@@ -14,7 +14,8 @@ async function checkNode(
   node: SceneNode,
   cache: DesignSystemCache,
   breadcrumb: string[],
-  withinInstance = false
+  withinInstance = false,
+  rootNodeIds?: ReadonlySet<string>
 ): Promise<Issue[]> {
   if (SKIP_TYPES.includes(node.type)) return []
 
@@ -27,7 +28,7 @@ async function checkNode(
     checkSpacing(node, cache, id, name, breadcrumb, exemptSpacing),
   ])
 
-  const componentIssues = await checkComponentRules(node, cache, id, name, breadcrumb, withinInstance)
+  const componentIssues = await checkComponentRules(node, cache, id, name, breadcrumb, withinInstance, rootNodeIds)
 
   issues.push(...colorIssues, ...spacingIssues, ...checkTextStyle(node, id, name, breadcrumb), ...componentIssues)
   return issues
@@ -39,6 +40,7 @@ export async function scanNodes(
 ): Promise<{ issues: Issue[]; nodeCount: number }> {
   clearVarCache()
 
+  const rootNodeIds = new Set(roots.map(r => r.id))
   const issues: Issue[] = []
   let nodeCount = 0
 
@@ -46,7 +48,7 @@ export async function scanNodes(
     if (node.visible === false || node.locked) return
 
     nodeCount++
-    const nodeIssues = await checkNode(node, cache, breadcrumb, withinInstance)
+    const nodeIssues = await checkNode(node, cache, breadcrumb, withinInstance, rootNodeIds)
     issues.push(...nodeIssues)
 
     if ('children' in node) {
