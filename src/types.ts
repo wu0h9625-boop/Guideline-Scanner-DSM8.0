@@ -32,6 +32,7 @@ export interface ComponentRule {
   name: string
   description: string
   targetComponentName: string
+  targetComponentNames?: string[]   // exact token-set match (OR logic); overrides targetComponentName when present
   excludeComponentName?: string
   requiredAncestorName?: string
   nodeTypeFilter?: string
