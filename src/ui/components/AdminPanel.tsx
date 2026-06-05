@@ -27,7 +27,7 @@ export default function AdminPanel({ cacheInfo, onRefresh }: Props) {
           <input
             className="url-input"
             type="url"
-            placeholder="https://your-server.com/design-rules.json"
+            placeholder="https://raw.githubusercontent.com/wu0h9625-boop/Guideline-Scanner-DSM8.0/main/rules.json"
             value={urlInput}
             onChange={e => setUrlInput(e.target.value)}
           />

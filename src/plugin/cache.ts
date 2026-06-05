@@ -6,7 +6,9 @@ const CACHE_TTL_MS = 24 * 60 * 60 * 1000
 
 const DEFAULT_SPACING_VALUES = [0, 2, 4, 6, 8, 10, 12, 14, 16, 20, 24, 28, 32, 36, 40, 44, 48, 56, 64, 72, 80, 96]
 
-export function emptyCache(rulesJsonUrl = ''): DesignSystemCache {
+const DEFAULT_RULES_URL = 'https://raw.githubusercontent.com/wu0h9625-boop/Guideline-Scanner-DSM8.0/main/rules.json'
+
+export function emptyCache(rulesJsonUrl = DEFAULT_RULES_URL): DesignSystemCache {
   return {
     version: CACHE_VERSION,
     lastUpdated: '',
@@ -25,6 +27,9 @@ export async function loadCache(): Promise<DesignSystemCache> {
     if (!raw) return emptyCache()
     const cache = JSON.parse(raw as string) as DesignSystemCache
     if (cache.version !== CACHE_VERSION) return emptyCache()
+    if (cache.rulesJsonUrl.includes('git.synology.inc')) {
+      cache.rulesJsonUrl = DEFAULT_RULES_URL
+    }
     return cache
   } catch (_) {
     return emptyCache()
