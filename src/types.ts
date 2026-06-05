@@ -70,6 +70,7 @@ export interface DesignSystemCache {
   approvedCollectionNames: string[]
   deprecatedCollectionKeys: string[]
   allowedSpacingValues: number[]
+  leftPaddingIndentMultipleOf?: number
   componentRules: ComponentRule[]
 }
 

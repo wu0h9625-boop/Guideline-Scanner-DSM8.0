@@ -126,6 +126,9 @@ export async function applyRulesJson(cache: DesignSystemCache, data: unknown): P
     if (Array.isArray(spacingConfig?.allowedValues)) {
       updated.allowedSpacingValues = spacingConfig!.allowedValues as number[]
     }
+    if (typeof spacingConfig?.leftPaddingIndentMultipleOf === 'number') {
+      updated.leftPaddingIndentMultipleOf = spacingConfig!.leftPaddingIndentMultipleOf as number
+    }
   }
 
   updated.lastUpdated = new Date().toISOString()

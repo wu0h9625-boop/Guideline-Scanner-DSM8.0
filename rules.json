@@ -1,5 +1,8 @@
 {
   "version": "1.0",
+  "spacingConfig": {
+    "leftPaddingIndentMultipleOf": 28
+  },
   "rules": [
     {
       "id": "window-stroke-shadow",
