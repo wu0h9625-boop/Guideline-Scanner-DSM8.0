@@ -17,6 +17,7 @@ export function emptyCache(rulesJsonUrl = DEFAULT_RULES_URL): DesignSystemCache 
     approvedCollectionNames: [],
     deprecatedCollectionKeys: [],
     allowedSpacingValues: DEFAULT_SPACING_VALUES,
+    leftPaddingIndentMultipleOf: 28,
     componentRules: [],
   }
 }
