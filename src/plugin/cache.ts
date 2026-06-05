@@ -1,7 +1,7 @@
 import type { DesignSystemCache, ComponentRule, CacheInfo } from '../types'
 
-const CACHE_KEY = 'dsCache_v1'
-const CACHE_VERSION = 1
+const CACHE_KEY = 'dsCache_v2'
+const CACHE_VERSION = 2
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000
 
 const DEFAULT_SPACING_VALUES = [0, 2, 4, 6, 8, 10, 12, 14, 16, 20, 24, 28, 32, 36, 40, 44, 48, 56, 64, 72, 80, 96]
@@ -63,8 +63,11 @@ export async function refreshCacheFromLibrary(currentCache: DesignSystemCache): 
   const newCache: DesignSystemCache = {
     ...emptyCache(currentCache.rulesJsonUrl),
     rulesJsonUrl: currentCache.rulesJsonUrl,
-    // Keep existing rules until we get a fresh fetch result
+    // Keep existing rules and config until we get a fresh fetch result
     componentRules: currentCache.componentRules,
+    ...(currentCache.leftPaddingIndentMultipleOf !== undefined && {
+      leftPaddingIndentMultipleOf: currentCache.leftPaddingIndentMultipleOf,
+    }),
   }
 
   try {
