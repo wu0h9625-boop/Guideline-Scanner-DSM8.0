@@ -55,8 +55,8 @@
       "targetComponentName": "tab bar",
       "checks": [
         { "type": "ownPadding", "side": "top", "variableName": "spacing-16" },
-        { "type": "ownPaddingByAncestor", "side": "right", "ifHasAncestorNamed": "body-right", "thenVariableName": "spacing-20", "elseVariableName": "spacing-24" },
-        { "type": "ownPaddingByAncestor", "side": "left", "ifHasAncestorNamed": "body-right", "thenVariableName": "spacing-20", "elseVariableName": "spacing-24" }
+        { "type": "ownPaddingByAncestor", "side": "right", "ifHasAncestorNamed": "body right", "thenVariableName": "spacing-20", "elseVariableName": "spacing-24" },
+        { "type": "ownPaddingByAncestor", "side": "left", "ifHasAncestorNamed": "body right", "thenVariableName": "spacing-20", "elseVariableName": "spacing-24" }
       ]
     },
     {
@@ -74,8 +74,8 @@
       "description": "Content Panel 的 right=spacing-20、left=spacing-20、bottom=spacing-16。Top padding 依有無 tab bar 而不同（有 tab bar 為 0，無 tab bar 為 spacing-16），請依情境設定。",
       "targetComponentName": "content panel",
       "checks": [
-        { "type": "ownPaddingByAncestor", "side": "right", "ifHasAncestorNamed": "body-right", "thenVariableName": "spacing-20", "elseVariableName": "spacing-24" },
-        { "type": "ownPaddingByAncestor", "side": "left", "ifHasAncestorNamed": "body-right", "thenVariableName": "spacing-20", "elseVariableName": "spacing-24" },
+        { "type": "ownPaddingByAncestor", "side": "right", "ifHasAncestorNamed": "body right", "thenVariableName": "spacing-20", "elseVariableName": "spacing-24" },
+        { "type": "ownPaddingByAncestor", "side": "left", "ifHasAncestorNamed": "body right", "thenVariableName": "spacing-20", "elseVariableName": "spacing-24" },
         { "type": "ownPadding", "side": "bottom", "variableName": "spacing-16" },
         {
           "type": "ownPaddingByContext",
@@ -89,26 +89,26 @@
     {
       "id": "content-panel-in-content-viewport",
       "name": "Content Panel 必須放在 Content Viewport 內",
-      "description": "Content Panel 的直接父層 Frame 應命名含「content viewport」。請確認結構為：(body 或 body-right) > content viewport > content panel。",
+      "description": "Content Panel 的直接父層 Frame 應命名含「content viewport」。請確認結構為：(body 或 body right) > content viewport > content panel。",
       "targetComponentName": "content panel",
       "checks": [
         { "type": "mustHaveParentNamed", "parentName": "content viewport" }
       ]
     },
     {
-      "id": "body-left-in-body",
+      "id": "body left-in-body",
       "name": "Body-left 必須放在 Body 內",
-      "description": "Page list app window 的 body-left（page list 側欄）直接父層應命名含「body」。請確認結構為：page list app window > body > body-left。",
-      "targetComponentName": "body-left",
+      "description": "Page list app window 的 body left（page list 側欄）直接父層應命名含「body」。請確認結構為：page list app window > body > body left。",
+      "targetComponentName": "body left",
       "checks": [
         { "type": "mustHaveParentNamed", "parentName": "body" }
       ]
     },
     {
-      "id": "body-right-in-body",
+      "id": "body right-in-body",
       "name": "Body-right 必須放在 Body 內",
-      "description": "Page list app window 的 body-right 直接父層應命名含「body」。請確認結構為：page list app window > body > body-right。",
-      "targetComponentName": "body-right",
+      "description": "Page list app window 的 body right 直接父層應命名含「body」。請確認結構為：page list app window > body > body right。",
+      "targetComponentName": "body right",
       "checks": [
         { "type": "mustHaveParentNamed", "parentName": "body" }
       ]
@@ -119,6 +119,7 @@
       "description": "Fieldset 的直接父層應命名含「content panel」。請確認結構為：content panel > Fieldset。",
       "targetComponentName": "Fieldset",
       "checks": [
+        { "type": "skipIfParentNamed", "parentName": "fieldset" },
         { "type": "mustHaveParentNamed", "parentName": "content panel" }
       ]
     },

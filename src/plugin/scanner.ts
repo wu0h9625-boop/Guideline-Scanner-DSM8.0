@@ -45,6 +45,9 @@ export async function scanNodes(
     const nodeIssues = await checkNode(node, cache, breadcrumb)
     issues.push(...nodeIssues)
 
+    // Component instance 的子節點屬於 component 本身，不個別掃描
+    if (node.type === 'INSTANCE') return
+
     if ('children' in node) {
       const childBreadcrumb = [...breadcrumb, node.name]
       for (const child of node.children) {

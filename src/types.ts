@@ -22,6 +22,8 @@ export interface Issue {
   type: IssueType
   property: string
   currentValue: string
+  // COMPONENT_RULE only
+  ruleName?: string
   ruleDescription?: string
 }
 
@@ -38,6 +40,7 @@ export type RuleCheck =
   | { type: 'parentPadding'; side: 'top' | 'right' | 'bottom' | 'left'; variableName: string }
   | { type: 'parentItemSpacing'; variableName: string }
   | { type: 'mustHaveParentNamed'; parentName: string }
+  | { type: 'skipIfParentNamed'; parentName: string }
   | { type: 'ownPadding'; side: 'top' | 'right' | 'bottom' | 'left'; variableName: string }
   | { type: 'ownPaddingByContext'; side: 'top' | 'right' | 'bottom' | 'left'; ifParentSiblingNamed: string; thenExpectedPx: number; elseVariableName: string }
   | { type: 'ownPaddingByAncestor'; side: 'top' | 'right' | 'bottom' | 'left'; ifHasAncestorNamed: string; thenVariableName: string; elseVariableName: string }
@@ -72,7 +75,8 @@ export type UIMessage =
   | { type: 'SCAN_RESULT'; issues: Issue[]; nodeCount: number }
   | { type: 'ERROR'; message: string }
   | { type: 'SELECTION_CHANGED'; hasSelection: boolean }
-  | { type: 'ANNOTATIONS_CLEARED' }
+  // Plugin delegates network fetch to UI (which has full browser network access)
+  | { type: 'FETCH_RULES_JSON'; url: string }
 
 // UI → Plugin
 export type PluginMessage =
@@ -80,6 +84,7 @@ export type PluginMessage =
   | { type: 'GET_CACHE' }
   | { type: 'REFRESH_CACHE'; rulesJsonUrl?: string }
   | { type: 'SELECT_NODE'; nodeId: string }
-  | { type: 'ANNOTATE'; issues: Issue[] }
-  | { type: 'CLEAR_ANNOTATIONS' }
   | { type: 'SAVE_RULES_URL'; url: string }
+  // UI returns fetch result back to plugin
+  | { type: 'RULES_JSON_RESULT'; data: unknown; error?: string }
+  | { type: 'RESIZE'; width: number; height: number }
