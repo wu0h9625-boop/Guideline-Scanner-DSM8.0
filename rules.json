@@ -167,6 +167,24 @@
       ]
     },
     {
+      "id": "content-panel-fill-when-datatable",
+      "name": "Content Panel 含 DataTable 時高度需設為 fill",
+      "description": "Content Panel 內有 DataTable 時，高度必須設為「Fill container」，讓 DataTable 撐滿可視區域。",
+      "targetComponentName": "content panel",
+      "checks": [
+        { "type": "requiredPropertyIfHasChild", "ifHasChildNamed": "data table", "property": "layoutSizingVertical", "expectedValue": "FILL" }
+      ]
+    },
+    {
+      "id": "panel-fill-when-datatable",
+      "name": "Panel 含 DataTable 時高度需設為 fill",
+      "description": "Panel 內有 DataTable 時，高度必須設為「Fill container」，讓 DataTable 撐滿可視區域。",
+      "targetComponentName": "panel",
+      "checks": [
+        { "type": "requiredPropertyIfHasChild", "ifHasChildNamed": "data table", "property": "layoutSizingVertical", "expectedValue": "FILL" }
+      ]
+    },
+    {
       "id": "table-footer-exempt-spacing",
       "name": "Table Footer 間距豁免",
       "description": "Table Footer 的 1px 上下 padding 與 135px 間距為設計規範，不需綁定 token。",

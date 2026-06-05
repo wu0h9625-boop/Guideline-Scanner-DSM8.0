@@ -50,6 +50,7 @@ export type RuleCheck =
   | { type: 'requiredProperty'; property: string; expectedValue: string | number }
   | { type: 'forbiddenProperty'; property: string }
   | { type: 'fillVariablePrefix'; prefix: string }
+  | { type: 'requiredPropertyIfHasChild'; ifHasChildNamed: string; property: string; expectedValue: string | number }
 
 export interface DesignSystemCache {
   version: number
