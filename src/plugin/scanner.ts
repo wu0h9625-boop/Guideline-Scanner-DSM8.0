@@ -12,18 +12,22 @@ const SKIP_TYPES: SceneNode['type'][] = ['CONNECTOR', 'STICKY', 'SHAPE_WITH_TEXT
 async function checkNode(
   node: SceneNode,
   cache: DesignSystemCache,
-  breadcrumb: string[]
+  breadcrumb: string[],
+  skipComponentRules = false
 ): Promise<Issue[]> {
   if (SKIP_TYPES.includes(node.type)) return []
 
   const { id, name } = node
   const issues: Issue[] = []
 
-  const [colorIssues, spacingIssues, componentIssues] = await Promise.all([
+  const [colorIssues, spacingIssues] = await Promise.all([
     checkFillsAndStrokes(node, cache, id, name, breadcrumb),
     checkSpacing(node, cache, id, name, breadcrumb),
-    checkComponentRules(node, cache, id, name, breadcrumb),
   ])
+
+  const componentIssues = skipComponentRules
+    ? []
+    : await checkComponentRules(node, cache, id, name, breadcrumb)
 
   issues.push(...colorIssues, ...spacingIssues, ...checkTextStyle(node, id, name, breadcrumb), ...componentIssues)
   return issues
@@ -38,20 +42,19 @@ export async function scanNodes(
   const issues: Issue[] = []
   let nodeCount = 0
 
-  async function traverse(node: SceneNode, breadcrumb: string[]): Promise<void> {
+  async function traverse(node: SceneNode, breadcrumb: string[], withinInstance = false): Promise<void> {
     if (node.visible === false || node.locked) return
 
     nodeCount++
-    const nodeIssues = await checkNode(node, cache, breadcrumb)
+    const nodeIssues = await checkNode(node, cache, breadcrumb, withinInstance)
     issues.push(...nodeIssues)
-
-    // Component instance 的子節點屬於 component 本身，不個別掃描
-    if (node.type === 'INSTANCE') return
 
     if ('children' in node) {
       const childBreadcrumb = [...breadcrumb, node.name]
+      // 進入 INSTANCE 後，子節點只跑 token 檢查，不跑 component 結構規則
+      const nextWithinInstance = withinInstance || node.type === 'INSTANCE'
       for (const child of node.children) {
-        await traverse(child, childBreadcrumb)
+        await traverse(child, childBreadcrumb, nextWithinInstance)
       }
     }
   }
