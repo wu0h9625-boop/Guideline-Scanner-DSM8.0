@@ -33,6 +33,7 @@ export interface ComponentRule {
   description: string
   targetComponentName: string
   excludeComponentName?: string
+  requiredAncestorName?: string
   nodeTypeFilter?: string
   exemptHardcodedSpacing?: number[]
   checks: RuleCheck[]
@@ -51,6 +52,7 @@ export type RuleCheck =
   | { type: 'requiredProperty'; property: string; expectedValue: string | number }
   | { type: 'forbiddenProperty'; property: string }
   | { type: 'fillVariablePrefix'; prefix: string }
+  | { type: 'fillVariableName'; variableName: string }
   | { type: 'requiredPropertyIfHasChild'; ifHasChildNamed: string; property: string; expectedValue: string | number }
   | { type: 'requiredPropertyByDescendant'; ifHasDescendantNamed: string; property: string; thenExpectedValue: string | number; elseExpectedValue: string | number }
 

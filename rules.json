@@ -164,6 +164,16 @@
       ]
     },
     {
+      "id": "module-item-icn-fill-ic-primary",
+      "name": "Module Item 內 icn 元件 fill 需使用 ic/primary",
+      "description": "Module Item 內的 icn 圖示元件，fill color 必須使用 ic/primary token。請確認 fill 綁定至 ic/primary variable。",
+      "targetComponentName": "icn",
+      "requiredAncestorName": "module item",
+      "checks": [
+        { "type": "fillVariableName", "variableName": "ic/primary" }
+      ]
+    },
+    {
       "id": "icon-fill-variable-ic-prefix",
       "name": "Icon 元件 fill token 需使用 ic 前綴",
       "description": "icn 開頭的 icon 元件的 fill color 必須使用 ic 前綴的 token（如 ic/primary、ic/subtle）。請重新綁定正確的 ic 系列 variable。",
