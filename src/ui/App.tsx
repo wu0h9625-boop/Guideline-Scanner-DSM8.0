@@ -149,6 +149,12 @@ export default function App() {
               onClick={handleScan}
               disabled={appState === 'scanning' || !hasSelection}
             >
+              {appState !== 'scanning' && (
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+                  <circle cx="6" cy="6" r="4.5" />
+                  <line x1="9.5" y1="9.5" x2="12.5" y2="12.5" />
+                </svg>
+              )}
               {appState === 'scanning' ? '掃描中...' : '掃描選取範圍'}
             </button>
           </div>

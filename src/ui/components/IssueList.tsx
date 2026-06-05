@@ -52,11 +52,11 @@ function RuleSubGroup({ group, onSelectNode }: { group: RuleGroup; onSelectNode:
         <span className="rule-subgroup-name">{group.ruleName}</span>
         <span className="rule-subgroup-count">{group.issues.length}</span>
         {group.description && (
-          <span
+          <button
             className="rule-info-btn"
             title={descOpen ? '收合說明' : '展開說明'}
             onClick={e => { e.stopPropagation(); setDescOpen(o => !o) }}
-          >ℹ</span>
+          >i</button>
         )}
         <span className="chevron">{open ? '▾' : '▸'}</span>
       </button>
@@ -89,10 +89,28 @@ export default function IssueList({ issues, onSelectNode }: Props) {
   const toggle = (type: IssueType) => setOpen(o => ({ ...o, [type]: !o[type] }))
 
   const total = issues.length
+  const dotColors: Partial<Record<IssueType, string>> = {
+    HARDCODED_COLOR: '#e5484d',
+    HARDCODED_SPACING: '#f76808',
+    WRONG_TOKEN: '#7a48e0',
+    DEPRECATED_TOKEN: '#d2a106',
+    MISSING_TEXT_STYLE: '#2f7deb',
+    COMPONENT_RULE: '#d6409f',
+  }
 
   return (
     <div className="issue-list">
-      <div className="issue-total">共 {total} 個問題</div>
+      <div className="issue-total">
+        共 {total} 個問題
+        <span className="total-dot-group">
+          {TYPE_ORDER.filter(t => grouped[t].length > 0).map(type => (
+            <span key={type} className="total-dot-count">
+              <span className="total-dot" style={{ background: dotColors[type] }} />
+              {grouped[type].length}
+            </span>
+          ))}
+        </span>
+      </div>
       {TYPE_ORDER.map(type => {
         const group = grouped[type]
         if (group.length === 0) return null
