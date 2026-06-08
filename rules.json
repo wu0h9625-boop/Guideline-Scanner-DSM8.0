@@ -60,15 +60,6 @@
       ]
     },
     {
-      "id": "tab-in-tab-bar",
-      "name": "Tab 元件必須包在 tab bar 內",
-      "description": "Tab 元件必須放在名稱含「tab bar」的 Auto Layout frame 內。請新增一個 tab bar frame 並將 Tab 元件放入。",
-      "targetComponentNames": ["Tab"],
-      "checks": [
-        { "type": "mustHaveParentNamed", "parentName": "tab bar" }
-      ]
-    },
-    {
       "id": "tab-bar-padding",
       "name": "Tab bar padding 規範",
       "description": "Tab bar 的 padding 應為 top=spacing-16、right=spacing-20、left=spacing-20（bottom=0 不綁 variable）。",
