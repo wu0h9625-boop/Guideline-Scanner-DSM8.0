@@ -34,6 +34,7 @@ export interface ComponentRule {
   targetComponentName: string
   targetComponentNames?: string[]   // exact token-set match (OR logic); overrides targetComponentName when present
   excludeComponentName?: string
+  excludeComponentNames?: string[]
   requiredAncestorName?: string
   nodeTypeFilter?: string
   exemptHardcodedSpacing?: number[]
