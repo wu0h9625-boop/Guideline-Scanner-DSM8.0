@@ -296,6 +296,7 @@
       "name": "Checkbox 與 Label 之間的間距",
       "description": "Checkbox 與相鄰 Label 之間的 gap 應綁定 spacing-8。請確認父層 frame 的 gap between items 設定為 spacing-8。",
       "targetComponentName": "Checkbox",
+      "excludeComponentName": "checkbox label",
       "checks": [
         { "type": "mustHaveParentFrame" },
         { "type": "parentItemSpacing", "variableName": "spacing-8" }
