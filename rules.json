@@ -63,8 +63,10 @@
       "id": "tab-in-tab-bar",
       "name": "Tab 元件必須包在 tab bar 內",
       "description": "Tab 元件必須放在名稱含「tab bar」的 Auto Layout frame 內。請新增一個 tab bar frame 並將 Tab 元件放入。",
-      "targetComponentNames": ["Tab"],
+      "targetComponentName": "Tab",
+      "excludeComponentName": "tab bar",
       "checks": [
+        { "type": "skipIfParentNamed", "parentName": "Tab" },
         { "type": "mustHaveParentNamed", "parentName": "tab bar" }
       ]
     },
