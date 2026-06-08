@@ -158,40 +158,28 @@
     {
       "id": "content-panel-item-spacing-fieldset",
       "name": "Content Panel 內容間距（Fieldset 情況）",
-      "description": "Content Panel 含 Fieldset 時 item spacing 應綁定 spacing-16。",
+      "description": "Content Panel 含 Fieldset 時 item spacing 應綁定 spacing-16；不含時應為 spacing-6。",
       "targetComponentName": "content panel",
       "checks": [
         {
           "type": "ownItemSpacingByChildType",
           "ifHasChildNamed": "fieldset",
           "thenVariableName": "spacing-16",
-          "elseVariableName": "spacing-16"
+          "elseVariableName": "spacing-6"
         }
       ]
     },
     {
       "id": "content-panel-item-spacing-section",
       "name": "Content Panel 內容間距（Section 情況）",
-      "description": "Content Panel 含 section frame 時 item spacing 應綁定 spacing-12。",
+      "description": "Content Panel 含 section frame 時 item spacing 應綁定 spacing-12；不含時應為 spacing-6。",
       "targetComponentName": "content panel",
       "checks": [
         {
           "type": "ownItemSpacingByChildType",
           "ifHasChildNamed": "section",
           "thenVariableName": "spacing-12",
-          "elseVariableName": "spacing-12"
-        }
-      ]
-    },
-    {
-      "id": "content-panel-item-spacing-default",
-      "name": "Content Panel 內容間距（預設）",
-      "description": "Content Panel 不含 Fieldset 或 section frame 時 item spacing 應綁定 spacing-6。",
-      "targetComponentName": "content panel",
-      "checks": [
-        {
-          "type": "ownItemSpacing",
-          "variableName": "spacing-6"
+          "elseVariableName": "spacing-6"
         }
       ]
     },
