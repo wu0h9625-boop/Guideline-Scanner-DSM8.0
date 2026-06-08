@@ -53,6 +53,9 @@ export type RuleCheck =
   | { type: 'ownPadding'; side: 'top' | 'right' | 'bottom' | 'left'; variableName: string }
   | { type: 'ownPaddingByContext'; side: 'top' | 'right' | 'bottom' | 'left'; ifParentSiblingNamed: string; thenExpectedPx: number; elseVariableName: string }
   | { type: 'ownPaddingByAncestor'; side: 'top' | 'right' | 'bottom' | 'left'; ifHasAncestorNamed: string; thenVariableName: string; elseVariableName: string }
+  | { type: 'ownItemSpacing'; variableName: string }
+  | { type: 'ownItemSpacingIfHasChild'; childName: string; variableName: string }
+  | { type: 'skipIfHasChildNamed'; childName: string }
   | { type: 'ownItemSpacingByChildType'; ifHasChildNamed: string; thenVariableName: string; elseVariableName: string }
   | { type: 'requiredProperty'; property: string; expectedValue: string | number }
   | { type: 'forbiddenProperty'; property: string }
