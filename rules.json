@@ -248,6 +248,22 @@
       "checks": []
     },
     {
+      "id": "tab-with-divider-exempt-spacing",
+      "name": "Tab with Divider 間距豁免",
+      "description": "Tab with Divider 的 -1px 間距為設計規範（用於 divider 重疊），不需綁定 token。",
+      "targetComponentName": "tab with divider",
+      "exemptHardcodedSpacing": [-1],
+      "checks": []
+    },
+    {
+      "id": "split-divider-exempt-spacing",
+      "name": "Split Divider 上下 padding 豁免",
+      "description": "Split Divider 的 1px 上下 padding 為設計規範，不需綁定 token。",
+      "targetComponentName": "split divider",
+      "exemptHardcodedSpacing": [1],
+      "checks": []
+    },
+    {
       "id": "button-gap-item-spacing",
       "name": "Button 並排間距",
       "description": "非 Footer Bar 類的 Button 左右並排，或 Button 與 Input / Select 並排時，父層容器的 item spacing 應綁定 spacing-6。請確認父層 frame 的 gap between items 設定為 spacing-6。",
