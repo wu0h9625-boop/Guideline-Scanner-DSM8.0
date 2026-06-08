@@ -293,21 +293,21 @@
     },
     {
       "id": "checkbox-internal-spacing",
-      "name": "Checkbox 內部間距（Checkbox + Label）",
-      "description": "Checkbox component 內 Checkbox 和 Label 之間的 gap 應綁定 spacing-8。請確認 Checkbox component 的 item spacing 設定為 spacing-8。",
+      "name": "Checkbox 與 Label 之間的間距",
+      "description": "Checkbox 與相鄰 Label 之間的 gap 應綁定 spacing-8。請確認父層 frame 的 gap between items 設定為 spacing-8。",
       "targetComponentName": "Checkbox",
       "checks": [
-        { "type": "ownItemSpacing", "variableName": "spacing-8" }
+        { "type": "mustHaveParentFrame" },
+        { "type": "parentItemSpacing", "variableName": "spacing-8" }
       ]
     },
     {
       "id": "checkbox-gap-item-spacing",
       "name": "Checkbox 與相鄰元件的間距",
-      "description": "Checkbox + Label 這個元件與其 Description 或巢狀 Form Items 之間的 gap 應綁定 spacing-6。請確認父層 frame 的 gap between items 設定為 spacing-6。",
+      "description": "Checkbox + Label 群組與其 Description 或巢狀 Form Items 之間的 gap 應綁定 spacing-6。請確認外層 frame 的 gap between items 設定為 spacing-6。",
       "targetComponentName": "Checkbox",
       "checks": [
-        { "type": "mustHaveParentFrame" },
-        { "type": "parentItemSpacing", "variableName": "spacing-6" }
+        { "type": "grandparentItemSpacing", "variableName": "spacing-6" }
       ]
     },
     {

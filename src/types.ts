@@ -45,6 +45,7 @@ export type RuleCheck =
   | { type: 'mustHaveParentFrame' }
   | { type: 'parentPadding'; side: 'top' | 'right' | 'bottom' | 'left'; variableName: string }
   | { type: 'parentItemSpacing'; variableName: string }
+  | { type: 'grandparentItemSpacing'; variableName: string }
   | { type: 'mustHaveParentNamed'; parentName: string }
   | { type: 'skipIfParentNamed'; parentName: string }
   | { type: 'skipIfHasAncestorNamed'; ancestorName: string }
