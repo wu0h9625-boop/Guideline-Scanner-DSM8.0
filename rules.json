@@ -158,14 +158,28 @@
     {
       "id": "content-panel-item-spacing",
       "name": "Content Panel 內容間距",
-      "description": "Content Panel 放置 Fieldset 時 item spacing 應綁定 spacing-16；放置一般 section 時應綁定 spacing-12。",
+      "description": "Content Panel 放置 Fieldset 時 item spacing 應綁定 spacing-16；含 section frame 時應綁定 spacing-12；其他情況應綁定 spacing-6。",
       "targetComponentName": "content panel",
       "checks": [
         {
           "type": "ownItemSpacingByChildType",
           "ifHasChildNamed": "fieldset",
           "thenVariableName": "spacing-16",
-          "elseVariableName": "spacing-12"
+          "elseVariableName": "spacing-6"
+        }
+      ]
+    },
+    {
+      "id": "content-panel-item-spacing-section",
+      "name": "Content Panel 內容間距（Section 情況）",
+      "description": "Content Panel 含 section frame 時 item spacing 應綁定 spacing-12。請確認 Content Panel 的 gap between items 設定為 spacing-12。",
+      "targetComponentName": "content panel",
+      "checks": [
+        {
+          "type": "ownItemSpacingByChildType",
+          "ifHasChildNamed": "section",
+          "thenVariableName": "spacing-12",
+          "elseVariableName": "spacing-6"
         }
       ]
     },
