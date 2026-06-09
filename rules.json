@@ -1,5 +1,60 @@
 {
   "version": "1.0",
+  "categoryMap": [
+    {
+      "name": "版面結構",
+      "ids": [
+        "content-viewport-height-fill",
+        "content-panel-height",
+        "content-panel-in-content-viewport",
+        "body left-in-body",
+        "body right-in-body",
+        "fieldset-in-content-panel",
+        "tab-in-tab-bar",
+        "tab-bar-width-fill",
+        "panel-fill-when-datatable"
+      ]
+    },
+    {
+      "name": "間距",
+      "ids": [
+        "HARDCODED_SPACING",
+        "label-value-item-spacing",
+        "form-group-item-spacing",
+        "tab-bar-padding",
+        "content-panel-padding",
+        "fieldset-item-spacing",
+        "content-panel-item-spacing-fieldset",
+        "content-panel-item-spacing-section",
+        "content-panel-item-spacing-default",
+        "button-gap-item-spacing",
+        "checkbox-internal-spacing",
+        "checkbox-gap-item-spacing",
+        "radio-internal-spacing",
+        "radio-gap-item-spacing",
+        "toolbar-above-datatable-gap",
+        "split-bar-placement-and-gap"
+      ]
+    },
+    {
+      "name": "顏色",
+      "ids": [
+        "HARDCODED_COLOR",
+        "WRONG_TOKEN",
+        "DEPRECATED_TOKEN",
+        "window-stroke-shadow",
+        "text-fill-variable-fg-prefix",
+        "module-item-icn-fill-ic-primary",
+        "icon-fill-variable-ic-prefix"
+      ]
+    },
+    {
+      "name": "文字",
+      "ids": [
+        "MISSING_TEXT_STYLE"
+      ]
+    }
+  ],
   "spacingConfig": {
     "leftPaddingIndentMultipleOf": 28
   },
@@ -311,13 +366,22 @@
       ]
     },
     {
-      "id": "radio-gap-item-spacing",
-      "name": "Radio 與相鄰元件的間距",
-      "description": "Radio 與其 Description 或巢狀 Form Items 之間的 gap 應綁定 spacing-6。請確認父層 frame 的 gap between items 設定為 spacing-6。",
-      "targetComponentName": "Radio",
+      "id": "radio-internal-spacing",
+      "name": "Radio 與 Label 之間的間距",
+      "description": "Radio 與相鄰 Label 之間的 gap 應綁定 spacing-8。請確認父層 frame 的 gap between items 設定為 spacing-8。",
+      "targetComponentNames": ["Radio"],
       "checks": [
         { "type": "mustHaveParentFrame" },
-        { "type": "parentItemSpacing", "variableName": "spacing-6" }
+        { "type": "parentItemSpacing", "variableName": "spacing-8" }
+      ]
+    },
+    {
+      "id": "radio-gap-item-spacing",
+      "name": "Radio 與相鄰元件的間距",
+      "description": "Radio + Label 群組與其 Description 或巢狀 Form Items 之間的 gap 應綁定 spacing-6。請確認外層 frame 的 gap between items 設定為 spacing-6。",
+      "targetComponentNames": ["Radio"],
+      "checks": [
+        { "type": "grandparentItemSpacing", "variableName": "spacing-6" }
       ]
     },
     {

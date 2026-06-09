@@ -1,55 +1,84 @@
 import { useState } from 'react'
-import type { Issue, IssueType } from '../../../src/types'
+import type { Issue, CategoryEntry } from '../../../src/types'
 import { ISSUE_LABELS } from '../../../src/types'
 import IssueItem from './IssueItem'
 
 interface Props {
   issues: Issue[]
+  categoryMap: CategoryEntry[]
   onSelectNode: (id: string) => void
 }
 
-const TYPE_ORDER: IssueType[] = [
-  'HARDCODED_COLOR',
-  'HARDCODED_SPACING',
-  'WRONG_TOKEN',
-  'DEPRECATED_TOKEN',
-  'MISSING_TEXT_STYLE',
-  'COMPONENT_RULE',
-]
-
-// For COMPONENT_RULE: sub-group by rule id
-interface RuleGroup {
-  ruleId: string
-  ruleName: string
-  description: string
+interface SubGroup {
+  key: string
+  label: string
+  description?: string
   issues: Issue[]
 }
 
-function groupByRule(issues: Issue[]): RuleGroup[] {
-  const map = new Map<string, RuleGroup>()
+interface CategoryGroup {
+  name: string
+  color: string
+  subGroups: SubGroup[]
+}
+
+const CATEGORY_PALETTE = ['#2f7deb', '#f76808', '#e5484d', '#7a48e0', '#d2a106', '#d6409f', '#47a872']
+const OTHER_COLOR = '#888'
+
+function getRuleId(issue: Issue): string {
+  return issue.property.replace(/^rule:/, '')
+}
+
+function buildCategoryGroups(issues: Issue[], categoryMap: CategoryEntry[]): CategoryGroup[] {
+  const idToCat = new Map<string, string>()
+  for (const cat of categoryMap) {
+    for (const id of cat.ids) idToCat.set(id, cat.name)
+  }
+
+  // category name -> (subgroup key -> SubGroup)
+  const catMap = new Map<string, Map<string, SubGroup>>()
+  const catOrder = [...categoryMap.map(c => c.name), '其他']
+  for (const name of catOrder) catMap.set(name, new Map())
+
   for (const issue of issues) {
-    const ruleId = issue.property.replace(/^rule:/, '')
-    if (!map.has(ruleId)) {
-      map.set(ruleId, {
-        ruleId,
-        ruleName: issue.ruleName ?? ruleId,
-        description: issue.ruleDescription ?? '',
+    const lookupKey = issue.type === 'COMPONENT_RULE' ? getRuleId(issue) : issue.type
+    const catName = idToCat.get(lookupKey) ?? '其他'
+    const subGroupMap = catMap.get(catName)!
+
+    const subKey = issue.type === 'COMPONENT_RULE' ? getRuleId(issue) : issue.type
+    if (!subGroupMap.has(subKey)) {
+      subGroupMap.set(subKey, {
+        key: subKey,
+        label: issue.type === 'COMPONENT_RULE' ? (issue.ruleName ?? subKey) : ISSUE_LABELS[issue.type],
+        description: issue.type === 'COMPONENT_RULE' ? issue.ruleDescription : undefined,
         issues: [],
       })
     }
-    map.get(ruleId)!.issues.push(issue)
+    subGroupMap.get(subKey)!.issues.push(issue)
   }
-  return Array.from(map.values())
+
+  const result: CategoryGroup[] = []
+  let colorIdx = 0
+  for (const name of catOrder) {
+    const subGroupMap = catMap.get(name)!
+    if (subGroupMap.size === 0) continue
+    result.push({
+      name,
+      color: name === '其他' ? OTHER_COLOR : (CATEGORY_PALETTE[colorIdx++] ?? OTHER_COLOR),
+      subGroups: Array.from(subGroupMap.values()),
+    })
+  }
+  return result
 }
 
-function RuleSubGroup({ group, onSelectNode }: { group: RuleGroup; onSelectNode: (id: string) => void }) {
+function SubGroupBlock({ group, onSelectNode }: { group: SubGroup; onSelectNode: (id: string) => void }) {
   const [open, setOpen] = useState(true)
   const [descOpen, setDescOpen] = useState(false)
 
   return (
     <div className="rule-subgroup">
       <button className="rule-subgroup-header" onClick={() => setOpen(o => !o)}>
-        <span className="rule-subgroup-name">{group.ruleName}</span>
+        <span className="rule-subgroup-name">{group.label}</span>
         <span className="rule-subgroup-count">{group.issues.length}</span>
         {group.description && (
           <button
@@ -60,11 +89,9 @@ function RuleSubGroup({ group, onSelectNode }: { group: RuleGroup; onSelectNode:
         )}
         <span className="chevron">{open ? '▾' : '▸'}</span>
       </button>
-
       {descOpen && group.description && (
         <div className="rule-subgroup-desc">{group.description}</div>
       )}
-
       {open && group.issues.map((issue, i) => (
         <IssueItem
           key={`${issue.nodeId}-${issue.property}-${i}`}
@@ -76,64 +103,46 @@ function RuleSubGroup({ group, onSelectNode }: { group: RuleGroup; onSelectNode:
   )
 }
 
-export default function IssueList({ issues, onSelectNode }: Props) {
-  const grouped = TYPE_ORDER.reduce<Record<IssueType, Issue[]>>((acc, type) => {
-    acc[type] = issues.filter(i => i.type === type)
-    return acc
-  }, {} as Record<IssueType, Issue[]>)
+export default function IssueList({ issues, categoryMap, onSelectNode }: Props) {
+  const categoryGroups = buildCategoryGroups(issues, categoryMap)
+  const [closedCats, setClosedCats] = useState<Set<string>>(new Set())
 
-  const [open, setOpen] = useState<Record<IssueType, boolean>>(() =>
-    TYPE_ORDER.reduce<Record<IssueType, boolean>>((acc, t) => { acc[t] = true; return acc }, {} as Record<IssueType, boolean>)
-  )
-
-  const toggle = (type: IssueType) => setOpen(o => ({ ...o, [type]: !o[type] }))
+  const toggle = (name: string) => setClosedCats(o => {
+    const next = new Set(o)
+    if (next.has(name)) next.delete(name)
+    else next.add(name)
+    return next
+  })
 
   const total = issues.length
-  const dotColors: Partial<Record<IssueType, string>> = {
-    HARDCODED_COLOR: '#e5484d',
-    HARDCODED_SPACING: '#f76808',
-    WRONG_TOKEN: '#7a48e0',
-    DEPRECATED_TOKEN: '#d2a106',
-    MISSING_TEXT_STYLE: '#2f7deb',
-    COMPONENT_RULE: '#d6409f',
-  }
 
   return (
     <div className="issue-list">
       <div className="issue-total">
         共 {total} 個問題
         <span className="total-dot-group">
-          {TYPE_ORDER.filter(t => grouped[t].length > 0).map(type => (
-            <span key={type} className="total-dot-count">
-              <span className="total-dot" style={{ background: dotColors[type] }} />
-              {grouped[type].length}
+          {categoryGroups.map(g => (
+            <span key={g.name} className="total-dot-count">
+              <span className="total-dot" style={{ background: g.color }} />
+              {g.subGroups.reduce((n, sg) => n + sg.issues.length, 0)}
             </span>
           ))}
         </span>
       </div>
-      {TYPE_ORDER.map(type => {
-        const group = grouped[type]
-        if (group.length === 0) return null
-        const isOpen = open[type]
-
+      {categoryGroups.map(cat => {
+        const isOpen = !closedCats.has(cat.name)
+        const catCount = cat.subGroups.reduce((n, sg) => n + sg.issues.length, 0)
         return (
-          <div key={type} className="issue-group">
-            <button className={`group-header ${isOpen ? 'open' : ''}`} onClick={() => toggle(type)}>
-              <span className={`group-dot dot-${type}`} />
-              <span className="group-label">{ISSUE_LABELS[type]}</span>
-              <span className="group-count">{group.length}</span>
+          <div key={cat.name} className="issue-group">
+            <button className={`group-header ${isOpen ? 'open' : ''}`} onClick={() => toggle(cat.name)}>
+              <span className="group-dot" style={{ background: cat.color }} />
+              <span className="group-label">{cat.name}</span>
+              <span className="group-count">{catCount}</span>
               <span className="chevron">{isOpen ? '▾' : '▸'}</span>
             </button>
-
-            {isOpen && (
-              type === 'COMPONENT_RULE'
-                ? groupByRule(group).map(ruleGroup => (
-                    <RuleSubGroup key={ruleGroup.ruleId} group={ruleGroup} onSelectNode={onSelectNode} />
-                  ))
-                : group.map((issue, i) => (
-                    <IssueItem key={`${issue.nodeId}-${issue.property}-${i}`} issue={issue} onSelect={onSelectNode} />
-                  ))
-            )}
+            {isOpen && cat.subGroups.map(sg => (
+              <SubGroupBlock key={sg.key} group={sg} onSelectNode={onSelectNode} />
+            ))}
           </div>
         )
       })}

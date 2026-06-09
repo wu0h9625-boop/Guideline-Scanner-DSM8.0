@@ -1,3 +1,8 @@
+export interface CategoryEntry {
+  name: string
+  ids: string[]
+}
+
 export type IssueType =
   | 'HARDCODED_COLOR'
   | 'HARDCODED_SPACING'
@@ -77,6 +82,7 @@ export interface DesignSystemCache {
   allowedSpacingValues: number[]
   leftPaddingIndentMultipleOf?: number
   componentRules: ComponentRule[]
+  categoryMap?: CategoryEntry[]
 }
 
 export interface CacheInfo {
@@ -86,6 +92,7 @@ export interface CacheInfo {
   deprecatedCollectionNames: string[]
   allowedSpacingValues: number[]
   componentRuleCount: number
+  categoryMap?: CategoryEntry[]
 }
 
 // Plugin → UI

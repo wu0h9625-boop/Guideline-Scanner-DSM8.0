@@ -1,4 +1,4 @@
-import type { DesignSystemCache, ComponentRule, CacheInfo } from '../types'
+import type { DesignSystemCache, ComponentRule, CacheInfo, CategoryEntry } from '../types'
 
 const CACHE_KEY = 'dsCache_v2'
 const CACHE_VERSION = 2
@@ -19,6 +19,7 @@ export function emptyCache(rulesJsonUrl = DEFAULT_RULES_URL): DesignSystemCache 
     allowedSpacingValues: DEFAULT_SPACING_VALUES,
     leftPaddingIndentMultipleOf: 28,
     componentRules: [],
+    categoryMap: [],
   }
 }
 
@@ -56,6 +57,7 @@ export function toCacheInfo(cache: DesignSystemCache): CacheInfo {
     deprecatedCollectionNames,
     allowedSpacingValues: cache.allowedSpacingValues,
     componentRuleCount: cache.componentRules.length,
+    categoryMap: cache.categoryMap,
   }
 }
 
@@ -132,6 +134,9 @@ export async function applyRulesJson(cache: DesignSystemCache, data: unknown): P
     }
     if (typeof spacingConfig?.leftPaddingIndentMultipleOf === 'number') {
       updated.leftPaddingIndentMultipleOf = spacingConfig!.leftPaddingIndentMultipleOf as number
+    }
+    if (Array.isArray(d.categoryMap)) {
+      updated.categoryMap = d.categoryMap as CategoryEntry[]
     }
   }
 

@@ -123,9 +123,7 @@ export default function App() {
 
   return (
     <div className="app">
-      <header className="header">
-        <h1 className="title" onClick={handleTitleClick}>Design Linter</h1>
-      </header>
+      <header className="header-tap" onClick={handleTitleClick} />
 
       {appState === 'loading' && (
         <div className="loading-state">
@@ -182,6 +180,7 @@ export default function App() {
               ) : (
                 <IssueList
                   issues={issues}
+                  categoryMap={cacheInfo?.categoryMap ?? []}
                   onSelectNode={id => postMessage({ type: 'SELECT_NODE', nodeId: id })}
                 />
               )}
