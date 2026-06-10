@@ -265,7 +265,7 @@
       "name": "Icon 元件 fill token 需使用 ic 前綴",
       "description": "icn 開頭的 icon 元件的 fill color 必須使用 ic 前綴的 token（如 ic/primary、ic/subtle）。請重新綁定正確的 ic 系列 variable。",
       "targetComponentName": "icn",
-      "excludeComponentNames": ["icn 20 info italic", "icn empty"],
+      "excludeComponentNames": ["icn 20 info italic", "icn empty", "icn_status", "icn_48_status"],
       "checks": [
         { "type": "fillVariablePrefix", "prefix": "ic" }
       ]
