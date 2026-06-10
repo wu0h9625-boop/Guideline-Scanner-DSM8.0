@@ -56,7 +56,8 @@
     }
   ],
   "spacingConfig": {
-    "leftPaddingIndentMultipleOf": 28
+    "leftPaddingIndentMultipleOf": 28,
+    "additionalAllowedValues": [3]
   },
   "rules": [
     {

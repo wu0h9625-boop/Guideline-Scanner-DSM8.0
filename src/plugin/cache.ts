@@ -132,6 +132,10 @@ export async function applyRulesJson(cache: DesignSystemCache, data: unknown): P
     if (Array.isArray(spacingConfig?.allowedValues)) {
       updated.allowedSpacingValues = spacingConfig!.allowedValues as number[]
     }
+    if (Array.isArray(spacingConfig?.additionalAllowedValues)) {
+      const extra = spacingConfig!.additionalAllowedValues as number[]
+      updated.allowedSpacingValues = Array.from(new Set([...updated.allowedSpacingValues, ...extra])).sort((a, b) => a - b)
+    }
     if (typeof spacingConfig?.leftPaddingIndentMultipleOf === 'number') {
       updated.leftPaddingIndentMultipleOf = spacingConfig!.leftPaddingIndentMultipleOf as number
     }
