@@ -18,6 +18,7 @@ export default function App() {
   const [cacheInfo, setCacheInfo] = useState<CacheInfo | null>(null)
   const [errorMsg, setErrorMsg] = useState('')
   const [showAdmin, setShowAdmin] = useState(false)
+  const [ignoredKeys, setIgnoredKeys] = useState<Set<string>>(new Set())
   const titleClickCount = useRef(0)
   const titleClickTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -73,6 +74,9 @@ export default function App() {
           setNodeCount(msg.nodeCount)
           setAppState('results')
           break
+        case 'IGNORE_LIST':
+          setIgnoredKeys(new Set(msg.keys))
+          break
         case 'ERROR':
           setErrorMsg(msg.message)
           setAppState(s => s === 'scanning' ? 'idle' : s)
@@ -102,6 +106,16 @@ export default function App() {
     setErrorMsg('')
     postMessage({ type: 'SCAN' })
   }
+
+  const handleIgnore = useCallback((key: string) => {
+    setIgnoredKeys(prev => { const n = new Set(prev); n.add(key); return n })
+    postMessage({ type: 'IGNORE_ISSUE', key })
+  }, [])
+
+  const handleUnignore = useCallback((key: string) => {
+    setIgnoredKeys(prev => { const n = new Set(prev); n.delete(key); return n })
+    postMessage({ type: 'UNIGNORE_ISSUE', key })
+  }, [])
 
   const handleRefreshCache = (url?: string) => {
     setAppState('loading')
@@ -171,7 +185,7 @@ export default function App() {
 
           {appState === 'results' && (
             <>
-              {issues.length === 0 ? (
+              {issues.filter(i => !ignoredKeys.has(`${i.nodeId}::${i.property}`)).length === 0 ? (
                 <div className="success-state">
                   <div className="check-icon">✓</div>
                   <p>選取範圍符合設計規範</p>
@@ -180,8 +194,11 @@ export default function App() {
               ) : (
                 <IssueList
                   issues={issues}
+                  ignoredKeys={ignoredKeys}
                   categoryMap={cacheInfo?.categoryMap ?? []}
                   onSelectNode={id => postMessage({ type: 'SELECT_NODE', nodeId: id })}
+                  onIgnore={handleIgnore}
+                  onUnignore={handleUnignore}
                 />
               )}
             </>

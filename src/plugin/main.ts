@@ -4,7 +4,24 @@ import { scanNodes } from './scanner'
 
 declare const __html__: string
 
-figma.showUI(__html__, { width: 340, height: 500, themeColors: true })
+// ─── Ignore list (stored in Figma file, shared across all users) ──────────────
+const IGNORE_STORAGE_KEY = 'ignoreList_v1'
+
+function loadIgnoreKeys(): Set<string> {
+  try {
+    const raw = figma.root.getPluginData(IGNORE_STORAGE_KEY)
+    if (!raw) return new Set()
+    return new Set(JSON.parse(raw) as string[])
+  } catch (_) {
+    return new Set()
+  }
+}
+
+function saveIgnoreKeys(keys: Set<string>): void {
+  figma.root.setPluginData(IGNORE_STORAGE_KEY, JSON.stringify(Array.from(keys)))
+}
+
+figma.showUI(__html__, { width: 400, height: 700, themeColors: true })
 
 function send(msg: UIMessage): void {
   figma.ui.postMessage(msg)
@@ -44,7 +61,7 @@ async function doRefreshCache(urlOverride?: string): Promise<void> {
     if (url) {
       const { data, error } = await fetchRulesViaUI(url)
       if (error) {
-        console.warn('[Design Linter] Rules JSON fetch error:', error)
+        console.warn('[SynoDesign Linter] Rules JSON fetch error:', error)
       }
       cache = await applyRulesJson(cache, data)
     } else {
@@ -53,7 +70,7 @@ async function doRefreshCache(urlOverride?: string): Promise<void> {
 
     send({ type: 'CACHE_INFO', info: toCacheInfo(cache) })
   } catch (e) {
-    console.error('[Design Linter] Cache refresh failed:', e)
+    console.error('[SynoDesign Linter] Cache refresh failed:', e)
     send({ type: 'ERROR', message: '更新規則失敗，請確認網路連線與 URL。' })
   }
 }
@@ -70,6 +87,7 @@ async function init(): Promise<void> {
     send({ type: 'CACHE_INFO', info: toCacheInfo(cache) })
   }
 
+  send({ type: 'IGNORE_LIST', keys: Array.from(loadIgnoreKeys()) })
   send({ type: 'SELECTION_CHANGED', hasSelection: figma.currentPage.selection.length > 0 })
 }
 
@@ -89,7 +107,22 @@ figma.ui.onmessage = async (rawMsg: unknown) => {
   if (msg.type === 'GET_CACHE') {
     const cache = await loadCache()
     send({ type: 'CACHE_INFO', info: toCacheInfo(cache) })
+    send({ type: 'IGNORE_LIST', keys: Array.from(loadIgnoreKeys()) })
     send({ type: 'SELECTION_CHANGED', hasSelection: figma.currentPage.selection.length > 0 })
+    return
+  }
+
+  if (msg.type === 'IGNORE_ISSUE') {
+    const keys = loadIgnoreKeys()
+    keys.add(msg.key)
+    saveIgnoreKeys(keys)
+    return
+  }
+
+  if (msg.type === 'UNIGNORE_ISSUE') {
+    const keys = loadIgnoreKeys()
+    keys.delete(msg.key)
+    saveIgnoreKeys(keys)
     return
   }
 
@@ -117,7 +150,7 @@ figma.ui.onmessage = async (rawMsg: unknown) => {
       const { issues, nodeCount } = await scanNodes(selection, cache)
       send({ type: 'SCAN_RESULT', issues, nodeCount })
     } catch (e) {
-      console.error('[Design Linter] Scan error:', e)
+      console.error('[SynoDesign Linter] Scan error:', e)
       send({ type: 'ERROR', message: '掃描時發生錯誤，請重試。' })
     }
     return
@@ -129,10 +162,26 @@ figma.ui.onmessage = async (rawMsg: unknown) => {
   }
 
   if (msg.type === 'SELECT_NODE') {
-    const node = figma.getNodeById(msg.nodeId)
-    if (node && node.type !== 'DOCUMENT' && node.type !== 'PAGE') {
+    try {
+      const node = await figma.getNodeByIdAsync(msg.nodeId)
+      if (!node || (node as SceneNode & { removed?: boolean }).removed) {
+        figma.notify('找不到該元素（可能已被刪除）', { error: true })
+        return
+      }
+      if (node.type === 'DOCUMENT' || node.type === 'PAGE') return
+
+      // Navigate to the page containing this node if needed
+      let ancestor: BaseNode | null = node
+      while (ancestor && ancestor.type !== 'PAGE') ancestor = ancestor.parent
+      if (ancestor && ancestor.type === 'PAGE' && ancestor !== figma.currentPage) {
+        figma.currentPage = ancestor as PageNode
+      }
+
       figma.currentPage.selection = [node as SceneNode]
       figma.viewport.scrollAndZoomIntoView([node as SceneNode])
+      figma.notify(`已選取：${(node as SceneNode).name}`, { timeout: 1500 })
+    } catch (e) {
+      figma.notify(`選取失敗：${String(e)}`, { error: true })
     }
     return
   }

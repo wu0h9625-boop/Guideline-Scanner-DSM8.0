@@ -102,6 +102,7 @@ export type UIMessage =
   | { type: 'SCAN_RESULT'; issues: Issue[]; nodeCount: number }
   | { type: 'ERROR'; message: string }
   | { type: 'SELECTION_CHANGED'; hasSelection: boolean }
+  | { type: 'IGNORE_LIST'; keys: string[] }
   // Plugin delegates network fetch to UI (which has full browser network access)
   | { type: 'FETCH_RULES_JSON'; url: string }
 
@@ -112,6 +113,8 @@ export type PluginMessage =
   | { type: 'REFRESH_CACHE'; rulesJsonUrl?: string }
   | { type: 'SELECT_NODE'; nodeId: string }
   | { type: 'SAVE_RULES_URL'; url: string }
+  | { type: 'IGNORE_ISSUE'; key: string }
+  | { type: 'UNIGNORE_ISSUE'; key: string }
   // UI returns fetch result back to plugin
   | { type: 'RULES_JSON_RESULT'; data: unknown; error?: string }
   | { type: 'RESIZE'; width: number; height: number }

@@ -1,6 +1,6 @@
 {
-  "name": "Design Linter",
-  "id": "design-linter-plugin",
+  "name": "SynoDesign Linter",
+  "id": "1644673061248748064",
   "api": "1.0.0",
   "editorType": ["figma"],
   "permissions": ["teamlibrary"],
@@ -10,6 +10,7 @@
       "https://*.githubusercontent.com"
     ]
   },
+  "documentAccess": "dynamic-page",
   "main": "dist/plugin.js",
   "ui": "dist/index.html"
 }
