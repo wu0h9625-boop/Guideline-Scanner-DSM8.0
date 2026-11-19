@@ -129,7 +129,7 @@
     {
       "id": "tab-bar-padding",
       "name": "Tab bar padding 規範",
-      "description": "Tab bar 的 padding 應為 top=spacing-16、right=spacing-20、left=spacing-20（bottom=0 不綁 variable）。",
+      "description": "Tab bar 的 top padding 為 spacing-16，bottom=0 不綁 variable。Left / right padding 依有無 module list 而不同（有 module list 為 spacing-20，無 module list 為 spacing-24）。",
       "targetComponentName": "tab bar",
       "checks": [
         { "type": "ownPadding", "side": "top", "variableName": "spacing-16" },
@@ -149,7 +149,7 @@
     {
       "id": "content-panel-padding",
       "name": "Content Panel padding 規範",
-      "description": "Content Panel 的 right=spacing-20、left=spacing-20、bottom=spacing-16。Top padding 依有無 tab bar 而不同（有 tab bar 為 0，無 tab bar 為 spacing-16），請依情境設定。",
+      "description": "Content Panel 的 left / right padding 依有無 module list 而不同（有 module list 為 spacing-20，無 module list 為 spacing-24），bottom=spacing-16。Top padding 依有無 tab bar 而不同（有 tab bar 為 0，無 tab bar 為 spacing-16），請依情境設定。",
       "targetComponentName": "content panel",
       "checks": [
         { "type": "ownPaddingByAncestor", "side": "right", "ifHasAncestorNamed": "body right", "thenVariableName": "spacing-20", "elseVariableName": "spacing-24" },
