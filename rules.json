@@ -76,6 +76,7 @@
       "name": "Label / Value 間距",
       "description": "Label 與 Value 之間的 gap 應綁定 spacing-6 variable。請選取父層容器，確認 item spacing 設定為 spacing-6。",
       "targetComponentName": "Label",
+      "excludeComponentNames": ["Checkbox + Label", "Radio + Label"],
       "checks": [
         { "type": "mustHaveParentFrame" },
         { "type": "parentItemSpacing", "variableName": "spacing-6" }

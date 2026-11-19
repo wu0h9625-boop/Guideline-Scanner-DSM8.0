@@ -32,6 +32,11 @@ function rgbToHex(r: number, g: number, b: number): string {
   return `#${h(r)}${h(g)}${h(b)}`
 }
 
+/** 把間距數值寫成人看得懂的字串，整數不補小數。 */
+function pxLabel(n: number): string {
+  return `${Number.isInteger(n) ? n : Math.round(n * 100) / 100}px`
+}
+
 async function checkTokenBinding(
   variableId: string,
   cache: DesignSystemCache,
@@ -314,16 +319,18 @@ export async function checkComponentRules(
         const parent = node.parent
         if (!parent || !('layoutMode' in parent)) continue
 
-        const parentBoundVars = (parent as FrameNode).boundVariables ?? {}
-        const alias = (parentBoundVars as Record<string, VariableAlias | undefined>)['itemSpacing']
+        // 要改的是父層 frame，所以問題掛在父層上，點擊才會選到正確的節點
+        const target = parent as FrameNode
+        const targetBase = { ...ruleBase, nodeId: target.id, nodeName: target.name, breadcrumb: breadcrumb.slice(0, -1) }
+        const alias = ((target.boundVariables ?? {}) as Record<string, VariableAlias | undefined>)['itemSpacing']
 
         if (!alias?.id) {
-          issues.push({ ...ruleBase, type: 'COMPONENT_RULE', currentValue: `父層 item spacing 未綁定 ${check.variableName}` })
+          issues.push({ ...targetBase, type: 'COMPONENT_RULE', currentValue: `item spacing = ${pxLabel(target.itemSpacing)} 未綁 token，應為 ${check.variableName}` })
         } else {
           try {
             const variable = await figma.variables.getVariableByIdAsync(alias.id)
             if (variable && !varNameMatches(variable.name, check.variableName)) {
-              issues.push({ ...ruleBase, type: 'COMPONENT_RULE', currentValue: `父層使用了 ${variable.name}，應使用 ${check.variableName}` })
+              issues.push({ ...targetBase, type: 'COMPONENT_RULE', currentValue: `item spacing 使用了 ${variable.name}，應使用 ${check.variableName}` })
             }
           } catch (_) { /* ignore */ }
         }
@@ -332,16 +339,18 @@ export async function checkComponentRules(
         const grandparent = node.parent?.parent
         if (!grandparent || !('layoutMode' in grandparent)) continue
 
-        const gpBoundVars = (grandparent as FrameNode).boundVariables ?? {}
-        const alias = (gpBoundVars as Record<string, VariableAlias | undefined>)['itemSpacing']
+        // 要改的是祖父層 frame，所以問題掛在祖父層上，點擊才會選到正確的節點
+        const target = grandparent as FrameNode
+        const targetBase = { ...ruleBase, nodeId: target.id, nodeName: target.name, breadcrumb: breadcrumb.slice(0, -2) }
+        const alias = ((target.boundVariables ?? {}) as Record<string, VariableAlias | undefined>)['itemSpacing']
 
         if (!alias?.id) {
-          issues.push({ ...ruleBase, type: 'COMPONENT_RULE', currentValue: `祖父層 item spacing 未綁定 ${check.variableName}` })
+          issues.push({ ...targetBase, type: 'COMPONENT_RULE', currentValue: `item spacing = ${pxLabel(target.itemSpacing)} 未綁 token，應為 ${check.variableName}` })
         } else {
           try {
             const variable = await figma.variables.getVariableByIdAsync(alias.id)
             if (variable && !varNameMatches(variable.name, check.variableName)) {
-              issues.push({ ...ruleBase, type: 'COMPONENT_RULE', currentValue: `祖父層使用了 ${variable.name}，應使用 ${check.variableName}` })
+              issues.push({ ...targetBase, type: 'COMPONENT_RULE', currentValue: `item spacing 使用了 ${variable.name}，應使用 ${check.variableName}` })
             }
           } catch (_) { /* ignore */ }
         }
